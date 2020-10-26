@@ -1,0 +1,247 @@
+{
+  "id": "amici",
+  "name": "AMICI",
+  "version": "0.11.8",
+  "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
+  "url": "https://amici.readthedocs.io/en/latest/",
+  "dockerHubImageId": "docker.io/biosimulators/amici:0.11.8",
+  "format": {
+    "name": "Docker Image",
+    "version": "1.2",
+    "spec_url": "https://github.com/moby/moby/blob/master/image/spec/v1.2.md"
+  },
+  "authors": [{
+      "firstName": "Fabian",
+      "middleName": null,
+      "lastName": "Froehlich"
+    },
+    {
+      "firstName": "Jan",
+      "middleName": null,
+      "lastName": "Hasenauer"
+    },
+    {
+      "firstName": "Daniel",
+      "middleName": null,
+      "lastName": "Weindl"
+    },
+    {
+      "firstName": "Paul",
+      "middleName": null,
+      "lastName": "Stapor"
+    },
+    {
+      "firstName": "Fabian",
+      "middleName": "J.",
+      "lastName": "Theis"
+    },
+    {
+      "firstName": "Barbara",
+      "middleName": null,
+      "lastName": "Kaltenbacher"
+    },
+    {
+      "firstName": "Joachim",
+      "middleName": "O.",
+      "lastName": "Rädler"
+    },
+    {
+      "firstName": "Yannik",
+      "middleName": null,
+      "lastName": "Schälte"
+    }
+  ],
+  "references": {
+    "identifiers": [{
+      "namespace": "biotools",
+      "id": "AMICI",
+      "url": "https://bio.tools/AMICI"
+    }],
+    "citations": [{
+        "title": "Scalable parameter estimation for genome-scale biochemical reaction networks",
+        "authors": "Fabian Fröhlich, Barbara Kaltenbacher, Fabian J. Theis & Jan Hasenauer",
+        "journal": "PLOS Computational Biology",
+        "volume": 13,
+        "issue": 1,
+        "pages": "e1005331",
+        "year": 2017,
+        "identifiers": [{
+          "namespace": "doi",
+          "id": "10.1371/journal.pcbi.1005331",
+          "url": "https://doi.org/10.1371/journal.pcbi.1005331"
+        }]
+      },
+      {
+        "title": "Parameter estimation for dynamical systems with discrete events and logical operations",
+        "authors": "Fabian Fröhlich, Fabian J. Theis, Joachim O Rädler & Jan Hasenauer",
+        "journal": "Bioinformatics",
+        "volume": 33,
+        "issue": 7,
+        "pages": "1049-1056",
+        "year": 2017,
+        "identifiers": [{
+          "namespace": "doi",
+          "id": "10.1093/bioinformatics/btw764",
+          "url": "https://doi.org/10.1093/bioinformatics/btw764"
+        }]
+      }
+    ]
+  },
+  "license": "BSD",
+  "algorithms": [{
+      "id": "CVODES",
+      "name": "CVODES is a solver for stiff and nonstiff ODE systems (initial value problem) given in explicit form y’ = f(t,y,p) with sensitivity analysis capabilities (both forward and adjoint modes).",
+      "kisaoId": {
+        "namespace": "KISAO",
+        "id": "KISAO_0000496"
+      },
+      "modelingFrameworks": [{
+        "namespace": "SBO",
+        "id": "SBO_0000293"
+      }],
+      "modelFormats": [{
+        "namespace": "EDAM",
+        "id": "format_2585"
+      }],
+      "simulationFormats": [{
+        "namespace": "EDAM",
+        "id": "format_3685"
+      }],
+      "archiveFormats": [{
+        "namespace": "EDAM",
+        "id": "format_3686"
+      }],
+      "citations": [{
+        "title": "CVODES: the sensitivity-enabled ODE solver in SUNDIALS",
+        "authors": "Radu Serban & Alan C. Hindmarsh",
+        "journal": "ASME 2005 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference",
+        "volume": 47438,
+        "pages": "257-269",
+        "year": 2005,
+        "identifiers": [{
+          "namespace": "doi",
+          "id": "10.1115/DETC2005-85597",
+          "url": "https://doi.org/10.1115/DETC2005-85597"
+        }]
+      }],
+      "parameters": [{
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000209"
+          },
+          "name": "relative tolerance",
+          "type": "float",
+          "value": null
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000211"
+          },
+          "name": "absolute tolerance",
+          "type": "float",
+          "value": null
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000415"
+          },
+          "name": "Maximum number of steps",
+          "type": "integer",
+          "value": 500
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000XXX"
+          },
+          "name": "Flag to activate stability limit detection",
+          "type": "boolean",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "IDAS",
+      "name": "IDAS solves real differential-algebraic systems in N-space, in the general form F(t,y,y')=0, y(t0)=y0, y'(t0)=y'0 with sensitivity analysis.",
+      "kisaoId": {
+        "namespace": "KISAO",
+        "id": "KISAO_0000283"
+      },
+      "modelingFrameworks": [{
+        "namespace": "SBO",
+        "id": "SBO_0000293"
+      }],
+      "modelFormats": [{
+        "namespace": "EDAM",
+        "id": "format_2585"
+      }],
+      "simulationFormats": [{
+        "namespace": "EDAM",
+        "id": "format_3685"
+      }],
+      "archiveFormats": [{
+        "namespace": "EDAM",
+        "id": "format_3686"
+      }],
+      "citations": [{
+        "title": "SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers",
+        "authors": "Alan C. Hindmarsh, Peter N. Brown, Keith E. Grant, Steven L. Lee, Radu Serban, Dan E. Shumaker & Carol S. Woodward",
+        "journal": "ACM Transactions on Mathematical Software",
+        "volume": 31,
+        "issue": 3,
+        "pages": "363-396",
+        "year": 2005,
+        "identifiers": [{
+          "namespace": "doi",
+          "id": "10.1145/1089014.1089020",
+          "url": "https://doi.org/10.1145/1089014.1089020"
+        }]
+      }],
+      "parameters": [{
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000209"
+          },
+          "name": "relative tolerance",
+          "type": "float",
+          "value": null
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000211"
+          },
+          "name": "absolute tolerance",
+          "type": "float",
+          "value": null
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000415"
+          },
+          "name": "Maximum number of steps",
+          "type": "integer",
+          "value": 500
+        },
+        {
+          "kisaoId": {
+            "namespace": "KISAO",
+            "id": "KISAO_0000XXX"
+          },
+          "name": "Error control strategy",
+          "type": "boolean",
+          "value": false
+        }
+      ]
+    }
+  ],
+  "created": "2020-10-26T12:00:00Z",
+  "updated": "2020-10-26T12:00:00Z",
+  "biosimulators": {
+    "schemaVersion": "1.0.0",
+    "imageVersion": "1.0.0"
+  }
+}
