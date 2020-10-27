@@ -4,11 +4,10 @@
   "version": "0.11.8",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
   "url": "https://amici.readthedocs.io/en/latest/",
-  "dockerHubImageId": "docker.io/biosimulators/amici:0.11.8",
+  "image": "docker.io/biosimulators/amici:0.11.8",
   "format": {
-    "name": "Docker Image",
-    "version": "1.2",
-    "spec_url": "https://github.com/moby/moby/blob/master/image/spec/v1.2.md"
+    "namespace": "EDAM",
+    "id": "format_3973"
   },
   "authors": [{
       "firstName": "Fabian",
