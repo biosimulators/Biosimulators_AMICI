@@ -86,7 +86,10 @@
       }
     ]
   },
-  "license": "BSD",
+  "license": {
+    "namespace": "SPDX",
+    "id": "BSD-3-Clause"
+  },
   "algorithms": [{
       "id": "CVODES",
       "name": "CVODES is a solver for stiff and nonstiff ODE systems (initial value problem) given in explicit form y’ = f(t,y,p) with sensitivity analysis capabilities (both forward and adjoint modes).",
@@ -128,36 +131,40 @@
             "namespace": "KISAO",
             "id": "KISAO_0000209"
           },
+          "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": null
+          "value": 1e-8
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000211"
           },
+          "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": null
+          "value": 1e-16
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000415"
           },
+          "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": 500
+          "value": 10000
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
-            "id": "KISAO_0000XXX"
+            "id": "KISAO_0000243"
           },
+          "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": false
+          "value": true
         }
       ]
     },
@@ -203,36 +210,40 @@
             "namespace": "KISAO",
             "id": "KISAO_0000209"
           },
+          "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": null
+          "value": 1e-8
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000211"
           },
+          "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": null
+          "value": 1e-16
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000415"
           },
+          "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": 500
+          "value": 10000
         },
         {
           "kisaoId": {
             "namespace": "KISAO",
-            "id": "KISAO_0000XXX"
+            "id": "KISAO_0000243"
           },
-          "name": "Error control strategy",
+          "id": "StabilityLimitFlag",
+          "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": false
+          "value": true
         }
       ]
     }
