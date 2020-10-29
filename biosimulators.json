@@ -164,7 +164,7 @@
         {
           "kisaoId": {
             "namespace": "KISAO",
-            "id": "KISAO_0000243"
+            "id": "KISAO_0000543"
           },
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
@@ -243,7 +243,7 @@
         {
           "kisaoId": {
             "namespace": "KISAO",
-            "id": "KISAO_0000243"
+            "id": "KISAO_0000543"
           },
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
