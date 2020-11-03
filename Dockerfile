@@ -18,19 +18,24 @@ LABEL maintainer="BioSimulators Team <info@biosimulators.org>"
 # Install requirements
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
-        g++ \
         libatlas-base-dev \
         swig \
-    && pip3 install -U pip \
-    && pip3 install -U setuptools \
-    && apt-get remove -y \
-        g++ \
+    && pip install -U pip \
+    && pip install -U setuptools \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy code for command-line interface into image and install it
 COPY . /root/biosimulators_amici
-RUN pip3 install /root/biosimulators_amici
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+        g++ \
+    && pip install /root/biosimulators_amici \
+    && rm -rf /root/biosimulators_amici \
+    && apt-get remove -y \
+        g++ \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Entrypoint
 ENTRYPOINT ["amici"]
