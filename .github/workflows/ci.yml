@@ -1,0 +1,139 @@
+name: Test package, build image, and push image to GitHub Container Registry and BioSimulators
+
+on:
+  - push
+  - pull_request
+  - release:
+      types: [published]
+
+jobs:
+  init:
+    name: Checkout repository and get simulator id and version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 1
+      - name: Get simulator id and version from specifications
+        working-directory: ${GITHUB_WORKSPACE}
+        run: |
+          export IMAGE_ID_VERSION=$(python <<EOF
+          import json
+          import os
+          with open('biosimulators.json', 'r') as file:
+            specs = json.load(file)
+          print(specs['id'] + ':' + specs['version'])
+          EOF
+          )
+          IFS=":" read -a tmp <<< "$IMAGE_ID_VERSION"
+          unset IFS
+          export IMAGE_ID=${tmp[0]}
+          export IMAGE_VERSION=${tmp[1]}
+
+  build-tag-image:
+    name: Build and tag image
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
+      - working-directory: ${GITHUB_WORKSPACE}
+        run: |
+          docker build \
+            -f Dockerfile \
+            . \
+            --tag ghcr.io/${{ github.repository_owner }}/${IMAGE_ID_VERSION}
+
+  install-package:
+    name: Install package 
+    needs: build-tag-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      - name: Setup pip cache
+        uses: actions/cache@v2
+        with:
+          path: /opt/hostedtoolcache/Python
+          key: ${{ runner.os }}-pip-${{ hashFiles('${GITHUB_WORKSPACE}/requirements.txt') }}-${{ hashFiles('${GITHUB_WORKSPACE}/requirements.optional.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install pip, setuptools, and test utilities
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade setuptools
+      - name: Install additional dependencies
+        run: |
+          apt-get install -y --no-install-recommends \
+            g++ \
+            libatlas-base-dev \
+            swig
+      - name: Install package
+        working-directory: ${GITHUB_WORKSPACE} 
+        run: |
+          python -m pip install -e .[all]
+
+  test:
+    name: Test command-line interface and container
+    needs: install-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install requirements
+        run: python -m pip install pytest pytest-cov
+      - name: Test
+        run: python -m pytest tests --cov
+
+  compile-docs:
+    name: Compile documentation and push to repository
+    needs: install-package
+    runs-on: ubuntu-latest
+    steps:
+      - id: check_docs
+        name: Check there are docs
+        uses: andstor/file-existence-action@v1
+        working-directory: ${GITHUB_WORKSPACE}
+        with:
+          files: "docs"
+      - name: Install requirements
+        if: steps.check_docs.outputs.files_exists == 'true'
+        run: python -m pip install sphinx
+      - name: Compile documentation
+        if: steps.check_docs.outputs.files_exists == 'true'
+        working-directory: ${GITHUB_WORKSPACE}
+        run: |
+          sphinx-apidoc -f -P -o docs/source . setup.py
+          sphinx docs docs/_build/html
+      - name: Push docs to repository
+        if: steps.check_docs.outputs.files_exists == 'true' && github.ref == 'refs/heads/dev'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: dev-docs
+          base: dev
+          commit-message: "Updated docs"
+
+  push-image:
+    name: Push image to GitHub Container Registry
+    needs: test
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - working-directory: ${GITHUB_WORKSPACE}
+        run: |
+          docker login ghcr.io --username ${{ github.actor }} --password ${{ github.token }}
+          docker push ghcr.io/${{ github.repository_owner }}/${IMAGE_ID_VERSION}
+
+  submit-biosimulators:
+    name: Submit image to BioSimulators
+    needs: push-image
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl \
+            -X POST \
+            -u ${{ github.actor }}:${{ github.token }} \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/biosimulators/Biosimulators/issues \
+            -d '{"labels": ["Submit simulator"], "title": "Submit ${IMAGE_ID} ${IMAGE_VERSION}", "body": "---\nname: ${IMAGE_ID}\nversion: ${IMAGE_VERSION}\nspecificationsUrl: https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ github.repository }}/${{ github.ref }}/biosimulators.json\n\n---"}'
