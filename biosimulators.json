@@ -256,7 +256,7 @@
   "created": "2020-10-26T12:00:00Z",
   "updated": "2020-10-26T12:00:00Z",
   "biosimulators": {
-    "schemaVersion": "1.0.0",
+    "specificationsVersion": "1.0.0",
     "imageVersion": "1.0.0"
   }
 }
