@@ -3,7 +3,7 @@ FROM python:3.7.9-slim-buster
 
 # metadata
 LABEL base_image="python:3.7.9-slim-buster"
-LABEL version="1.0.0"
+LABEL version="0.0.1"
 LABEL software="AMICI"
 LABEL software.version="0.11.8"
 LABEL about.summary="AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)."
@@ -20,8 +20,6 @@ RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         libatlas-base-dev \
         swig \
-    && pip install -U pip \
-    && pip install -U setuptools \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
