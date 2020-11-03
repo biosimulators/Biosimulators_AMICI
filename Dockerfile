@@ -1,8 +1,8 @@
 # Base OS
-FROM ubuntu:20.04
+FROM python:3.7.9-slim-buster
 
 # metadata
-LABEL base_image="ubuntu:20.04"
+LABEL base_image="python:3.7.9-slim-buster"
 LABEL version="1.0.0"
 LABEL software="AMICI"
 LABEL software.version="0.11.8"
@@ -18,12 +18,13 @@ LABEL maintainer="BioSimulators Team <info@biosimulators.org>"
 # Install requirements
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
+        g++ \
         libatlas-base-dev \
         swig \
-        python3 \
-        python3-pip \
     && pip3 install -U pip \
     && pip3 install -U setuptools \
+    && apt-get remove -y \
+        g++ \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
