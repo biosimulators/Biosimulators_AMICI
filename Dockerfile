@@ -24,12 +24,12 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy code for command-line interface into image and install it
-COPY . /root/biosimulators_amici
+COPY . /root/Biosimulators_amici
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         g++ \
-    && pip install /root/biosimulators_amici \
-    && rm -rf /root/biosimulators_amici \
+    && pip install /root/Biosimulators_amici \
+    && rm -rf /root/Biosimulators_amici \
     && apt-get remove -y \
         g++ \
     && apt-get autoremove -y \
