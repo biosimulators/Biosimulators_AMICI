@@ -1,6 +1,12 @@
 # BioSimulators-AMICI
 BioSimulators-compliant command-line interface to the [AMICI](https://github.com/AMICI-dev/AMICI) simulation program.
 
+This command-line interface and Docker image enable users to use AMICI to execute [COMBINE/OMEX archives](https://combinearchive.org/) that describe one or more simulation experiments (in [SED-ML format](https://sed-ml.org)) of one or more models (in [SBML format](http://sbml.org])).
+
+A list of the algorithms and algorithm parameters supported by AMICI is available at [BioSimulators](https://biosimulators.org/simulators/amici).
+
+A simple web application and web service for using AMICI to execute COMBINE/OMEX archives is also available at [runBioSimulations](https://run.biosimulations.org).
+
 ## Contents
 * [Installation](#installation)
 * [Usage](#usage)
