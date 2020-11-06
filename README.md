@@ -1,3 +1,10 @@
+![Latest version](https://img.shields.io/github/v/tag/biosimulators/Biosimulators_AMICI)
+[![PyPI](https://img.shields.io/pypi/v/biosimulators_amici)](https://pypi.org/project/biosimulators_amici/)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/biosimulators/Biosimulators_AMICI/workflow-id)](https://github.com/biosimulators/Biosimulators_AMICI/actions?query=workflow%3Aworkflow-id)
+[![Documentation](https://img.shields.io/github/license/biosimulators/Biosimulators_AMICI?badges-awesome-green.svg)](https://biosimulators.github.io/Biosimulators_AMICI/)
+[![Issues](https://img.shields.io/github/issues/biosimulators/Biosimulators_AMICI)](https://github.com/biosimulators/Biosimulators_AMICI/issues)
+[![License](https://img.shields.io/github/license/biosimulators/Biosimulators_AMICI?badges-awesome-green.svg)](https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/LICENSE)
+
 # BioSimulators-AMICI
 BioSimulators-compliant command-line interface to the [AMICI](https://github.com/AMICI-dev/AMICI) simulation program.
 
@@ -10,6 +17,7 @@ A simple web application and web service for using AMICI to execute COMBINE/OMEX
 ## Contents
 * [Installation](#installation)
 * [Usage](#usage)
+* [Documentation](#documentation)
 * [License](#license)
 * [Development team](#development-team)
 * [Questions and comments](#questions-and-comments)
@@ -26,7 +34,9 @@ pip install git+https://github.com/biosimulators/Biosimulators_AMICI
 docker pull ghcr.io/biosimulators/amici
 ```
 
-## Local usage
+## Usage
+
+### Local usage
 ```
 usage: amici [-h] [-d] [-q] -i ARCHIVE [-o OUT_DIR] [-v]
 
@@ -44,7 +54,7 @@ optional arguments:
   -v, --version         show program's version number and exit
 ```
 
-## Usage through Docker container
+### Usage through Docker container
 ```
 docker run \
   --tty \
@@ -55,6 +65,9 @@ docker run \
     -i /root/in/BIOMD0000000297.omex \
     -o /root/out
 ```
+
+## Documentation
+Documentation is available at https://biosimulators.github.io/Biosimulators_AMICI/.
 
 ## License
 This package is released under the [MIT license](LICENSE).
