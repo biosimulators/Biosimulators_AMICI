@@ -103,8 +103,8 @@ jobs:
         if: steps.check_docs.outputs.files_exists == 'true'
         working-directory: ${GITHUB_WORKSPACE}
         run: |
-          sphinx-apidoc -f -P -o docs/source . setup.py
-          sphinx docs docs/_build/html
+          sphinx-apidoc . setup.py --output-dir docs-src/source --force --module-first --no-toc
+          sphinx-build docs-src docs
       - name: Push docs to repository
         if: steps.check_docs.outputs.files_exists == 'true' && github.ref == 'refs/heads/dev'
         uses: peter-evans/create-pull-request@v3
