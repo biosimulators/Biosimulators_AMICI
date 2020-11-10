@@ -52,14 +52,19 @@
   ],
   "references": {
     "identifiers": [{
-      "namespace": "biotools",
-      "id": "AMICI",
-      "url": "https://bio.tools/AMICI"
-    },
-    {
       "namespace": "pypi",
       "id": "amici",
       "url": "https://pypi.org/project/amici/"
+    },
+    {
+      "namespace": "pypi",
+      "id": "biosimulators-amici",
+      "url": "https://pypi.org/project/biosimulators-amici/"
+    },
+    {
+      "namespace": "biotools",
+      "id": "AMICI",
+      "url": "https://bio.tools/AMICI"
     }],
     "citations": [{
         "title": "Scalable parameter estimation for genome-scale biochemical reaction networks",
@@ -257,6 +262,7 @@
   "updated": "2020-10-26T12:00:00Z",
   "biosimulators": {
     "specificationsVersion": "1.0.0",
-    "imageVersion": "1.0.0"
+    "imageVersion": "1.0.0",
+    "validated": false
   }
 }
