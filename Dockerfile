@@ -2,18 +2,29 @@
 FROM python:3.7.9-slim-buster
 
 # metadata
-LABEL base_image="python:3.7.9-slim-buster"
-LABEL version="0.0.1"
-LABEL software="AMICI"
-LABEL software.version="0.11.8"
-LABEL about.summary="AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)."
-LABEL about.home="https://github.com/AMICI-dev/AMICI"
-LABEL about.documentation="https://amici.readthedocs.io/"
-LABEL about.license_file="https://github.com/AMICI-dev/AMICI/blob/master/LICENSE.md"
-LABEL about.license="BSD-3-Clause"
-LABEL about.tags="BioSimulators,mathematical model,kinetic model,simulation,systems biology,computational biology,SBML,SED-ML,COMBINE,OMEX"
-LABEL extra.identifiers.biotools="AMICI"
-LABEL maintainer="BioSimulators Team <info@biosimulators.org>"
+LABEL \
+    org.opencontainers.image.title="AMICI" \
+    org.opencontainers.image.version="0.11.8" \
+    org.opencontainers.image.description="Interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)." \
+    org.opencontainers.image.url="https://github.com/AMICI-dev/AMICI" \
+    org.opencontainers.image.documentation="https://amici.readthedocs.io/" \
+    org.opencontainers.image.source="https://github.com/biosimulators/Biosimulators_AMICI" \
+    org.opencontainers.image.authors="BioSimulators Team <info@biosimulators.org>" \
+    org.opencontainers.image.vendor="BioSimulators Team" \
+    org.opencontainers.image.licenses="BSD-3-Clause" \
+    \
+    base_image="python:3.7.9-slim-buster" \
+    version="0.0.1" \
+    software="AMICI" \
+    software.version="0.11.8" \
+    about.summary="Interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)." \
+    about.home="https://github.com/AMICI-dev/AMICI" \
+    about.documentation="https://amici.readthedocs.io/" \
+    about.license_file="https://github.com/AMICI-dev/AMICI/blob/master/LICENSE.md" \
+    about.license="SPDX:BSD-3-Clause" \
+    about.tags="BioSimulators,mathematical model,kinetic model,simulation,systems biology,computational biology,SBML,SED-ML,COMBINE,OMEX" \
+    extra.identifiers.biotools="AMICI" \
+    maintainer="BioSimulators Team <info@biosimulators.org>"
 
 # Install requirements
 RUN apt-get update -y \
