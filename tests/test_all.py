@@ -19,7 +19,7 @@ import unittest
 
 class CliTestCase(unittest.TestCase):
     EXAMPLE_ARCHIVE_FILENAME = 'tests/fixtures/BIOMD0000000297.omex'
-    DOCKER_IMAGE = 'ghcr.io/biosimulators/amici'
+    DOCKER_IMAGE = 'ghcr.io/biosimulators/biosimulators_amici/amici'
 
     def setUp(self):
         self.dirname = tempfile.mkdtemp()

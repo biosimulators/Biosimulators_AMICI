@@ -24,7 +24,7 @@ jobs:
           import os
           with open('biosimulators.json', 'r') as file:
             specs = json.load(file)
-          print(specs['id'] + ':' + specs['version'])
+          print((specs['id'] + ':' + specs['version']).lower())
           EOF
           )
           IFS=":" read -a tmp <<< "$IMAGE_ID_VERSION"
@@ -39,10 +39,12 @@ jobs:
     steps:
       - working-directory: ${GITHUB_WORKSPACE}
         run: |
+          export tag=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${IMAGE_ID_VERSION}
+          export tag=$(echo "$tag" | tr '[:upper:]' '[:lower:]')
           docker build \
             -f Dockerfile \
             . \
-            --tag ghcr.io/${{ github.repository_owner }}/${IMAGE_ID_VERSION}
+            --tag "$tag"
 
   install-package:
     name: Install package 
@@ -122,7 +124,7 @@ jobs:
       - working-directory: ${GITHUB_WORKSPACE}
         run: |
           docker login ghcr.io --username ${{ github.actor }} --password ${{ github.token }}
-          docker push ghcr.io/${{ github.repository_owner }}/${IMAGE_ID_VERSION}
+          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${IMAGE_ID_VERSION}
 
   submit-biosimulators:
     name: Submit image to BioSimulators

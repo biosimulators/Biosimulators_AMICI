@@ -4,7 +4,7 @@
   "version": "0.11.8",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
   "url": "https://github.com/AMICI-dev/amici",
-  "image": "ghcr.io/biosimulators/amici:0.11.8",
+  "image": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.8",
   "format": {
     "namespace": "EDAM",
     "id": "format_3973"
