@@ -13,6 +13,7 @@ import importlib.util
 import numpy
 import os.path
 import pandas
+import shutils
 import sys
 import tempfile
 
@@ -64,7 +65,7 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
         raise ValueError("Model language with URN '{}' is not supported".format(model_sed_urn))
 
     sbml_importer = amici.SbmlImporter(model_filename)
-    sbml_model = sbml_importer.sbml    
+    sbml_model = sbml_importer.sbml
 
     model_output_dir = tempfile.mkdtemp()
     model_name = 'biosimulators_amici_model_' + os.path.basename(model_output_dir)
