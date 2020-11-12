@@ -6,7 +6,7 @@
 :License: MIT
 """
 
-from Biosimulations_utils.simulation.data_model import Simulation  # noqa: F401
+from Biosimulations_utils.simulation.data_model import TimecourseSimulation
 from Biosimulations_utils.simulator.utils import exec_simulations_in_archive
 import amici
 import importlib.util
@@ -46,11 +46,17 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
     Args:
        model_filename (:obj:`str`): path to the model
        model_sed_urn (:obj:`str`): SED URN for the format of the model (e.g., `urn:sedml:language:sbml`)
-       simulation (:obj:`Simulation`): simulation
+       simulation (:obj:`TimecourseSimulation`): simulation
        working_dir (:obj:`str`): directory of the SED-ML file
        out_filename (:obj:`str`): path to save the results of the simulation
        out_format (:obj:`str`): format to save the results of the simulation (e.g., `csv`)
     '''
+    if not isinstance(simulation, TimecourseSimulation):
+        raise ValueError('{} is not supported'.format(simulation.__class__.__name__))
+
+    # check that model parameter changes have already been applied (because handled by :obj:`exec_simulations_in_archive`)
+    if simulation.model_parameter_changes:
+        raise ValueError('Model parameter changes are not supported')
 
     # Read the model located at `os.path.join(working_dir, model_filename)` in the format
     # with the SED URN `model_sed_urn`.
@@ -58,11 +64,7 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
         raise ValueError("Model language with URN '{}' is not supported".format(model_sed_urn))
 
     sbml_importer = amici.SbmlImporter(model_filename)
-    sbml_model = sbml_importer.sbml
-
-    # Check that model changes have already been applied
-    if simulation.model_parameter_changes:
-        raise ValueError('Model parameter changes are not supported')
+    sbml_model = sbml_importer.sbml    
 
     model_output_dir = tempfile.mkdtemp()
     model_name = 'biosimulators_amici_model_' + os.path.basename(model_output_dir)
