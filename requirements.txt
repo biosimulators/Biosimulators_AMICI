@@ -1,3 +1,5 @@
 amici
 cement
+numpy
+pandas
 Biosimulations_utils

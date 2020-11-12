@@ -189,18 +189,9 @@
         "namespace": "SBO",
         "id": "SBO_0000293"
       }],
-      "modelFormats": [{
-        "namespace": "EDAM",
-        "id": "format_2585"
-      }],
-      "simulationFormats": [{
-        "namespace": "EDAM",
-        "id": "format_3685"
-      }],
-      "archiveFormats": [{
-        "namespace": "EDAM",
-        "id": "format_3686"
-      }],
+      "modelFormats": [],
+      "simulationFormats": [],
+      "archiveFormats": [],
       "citations": [{
         "title": "SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers",
         "authors": "Alan C. Hindmarsh, Peter N. Brown, Keith E. Grant, Steven L. Lee, Radu Serban, Dan E. Shumaker & Carol S. Woodward",
