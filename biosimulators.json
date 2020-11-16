@@ -144,7 +144,7 @@
           "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": 1e-8
+          "value": "1e-8"
         },
         {
           "kisaoId": {
@@ -154,7 +154,7 @@
           "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": 1e-16
+          "value": "1e-16"
         },
         {
           "kisaoId": {
@@ -164,7 +164,7 @@
           "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": 10000
+          "value": "10000"
         },
         {
           "kisaoId": {
@@ -174,7 +174,7 @@
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": true
+          "value": "true"
         }
       ]
     },
@@ -214,7 +214,7 @@
           "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": 1e-8
+          "value": "1e-8"
         },
         {
           "kisaoId": {
@@ -224,7 +224,7 @@
           "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": 1e-16
+          "value": "1e-16"
         },
         {
           "kisaoId": {
@@ -234,7 +234,7 @@
           "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": 10000
+          "value": "10000"
         },
         {
           "kisaoId": {
@@ -244,7 +244,7 @@
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": true
+          "value": "true"
         }
       ]
     }
