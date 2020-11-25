@@ -3,51 +3,61 @@
   "name": "AMICI",
   "version": "0.11.8",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
-  "url": "https://github.com/AMICI-dev/amici",
-  "image": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.8",
-  "format": {
-    "namespace": "EDAM",
-    "id": "format_3973"
+  "urls": [{"type": "Home page", "url": "https://github.com/AMICI-dev/amici"}],
+  "image": {
+    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.8",
+    "format": {
+      "namespace": "EDAM",
+      "id": "format_3973", "version": null
+    }
   },
   "authors": [{
       "firstName": "Fabian",
       "middleName": null,
-      "lastName": "Froehlich"
+      "lastName": "Froehlich",
+            "identifiers": []
     },
     {
       "firstName": "Jan",
       "middleName": null,
-      "lastName": "Hasenauer"
+      "lastName": "Hasenauer",
+            "identifiers": []
     },
     {
       "firstName": "Daniel",
       "middleName": null,
-      "lastName": "Weindl"
+      "lastName": "Weindl",
+            "identifiers": []
     },
     {
       "firstName": "Paul",
       "middleName": null,
-      "lastName": "Stapor"
+      "lastName": "Stapor",
+            "identifiers": []
     },
     {
       "firstName": "Fabian",
       "middleName": "J.",
-      "lastName": "Theis"
+      "lastName": "Theis",
+            "identifiers": []
     },
     {
       "firstName": "Barbara",
       "middleName": null,
-      "lastName": "Kaltenbacher"
+      "lastName": "Kaltenbacher",
+            "identifiers": []
     },
     {
       "firstName": "Joachim",
       "middleName": "O.",
-      "lastName": "Rädler"
+      "lastName": "Rädler",
+            "identifiers": []
     },
     {
       "firstName": "Yannik",
       "middleName": null,
-      "lastName": "Schälte"
+      "lastName": "Schälte",
+            "identifiers": []
     }
   ],
   "references": {
@@ -113,15 +123,15 @@
       }],
       "modelFormats": [{
         "namespace": "EDAM",
-        "id": "format_2585"
+        "id": "format_2585", "version": null
       }],
       "simulationFormats": [{
         "namespace": "EDAM",
-        "id": "format_3685"
+        "id": "format_3685", "version": null
       }],
       "archiveFormats": [{
         "namespace": "EDAM",
-        "id": "format_3686"
+        "id": "format_3686", "version": null
       }],
       "citations": [{
         "title": "CVODES: the sensitivity-enabled ODE solver in SUNDIALS",
@@ -144,7 +154,9 @@
           "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": "1e-8"
+          "value": "1e-8",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -154,7 +166,9 @@
           "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": "1e-16"
+          "value": "1e-16",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -164,7 +178,9 @@
           "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": "10000"
+          "value": "10000",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -174,9 +190,12 @@
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": "true"
+          "value": "true",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         }
-      ]
+      ],
+      "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
     },
     {
       "id": "IDAS",
@@ -214,7 +233,9 @@
           "id": "RelativeTolerance",
           "name": "relative tolerance",
           "type": "float",
-          "value": "1e-8"
+          "value": "1e-8",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -224,7 +245,9 @@
           "id": "AbsoluteTolerance",
           "name": "absolute tolerance",
           "type": "float",
-          "value": "1e-16"
+          "value": "1e-16",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -234,7 +257,9 @@
           "id": "MaxSteps",
           "name": "Maximum number of steps",
           "type": "integer",
-          "value": "10000"
+          "value": "10000",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         },
         {
           "kisaoId": {
@@ -244,15 +269,18 @@
           "id": "StabilityLimitFlag",
           "name": "Flag to activate stability limit detection",
           "type": "boolean",
-          "value": "true"
+          "value": "true",
+          "recommendedRange": null,
+                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
         }
-      ]
+      ],
+      "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
     }
   ],
-  "created": "2020-10-26T12:00:00Z",
-  "updated": "2020-10-26T12:00:00Z",
+  "interfaceTypes": ["library", "command-line application", "BioSimulators Docker image"],
+  "supportedProgrammingLanguages": ["Python", "C++", "MATLAB"],
   "biosimulators": {
-    "specificationsVersion": "1.0.0",
+    "specificationVersion": "1.0.0",
     "imageVersion": "1.0.0",
     "validated": false
   }
