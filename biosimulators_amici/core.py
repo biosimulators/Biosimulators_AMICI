@@ -6,7 +6,7 @@
 :License: MIT
 """
 
-from Biosimulations_utils.simulation.data_model import TimecourseSimulation
+from Biosimulations_utils.simulation.data_model import TimecourseSimulation, SimulationResultsFormat
 from Biosimulations_utils.simulator.utils import exec_simulations_in_archive
 import amici
 import importlib.util
@@ -50,20 +50,26 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
        simulation (:obj:`TimecourseSimulation`): simulation
        working_dir (:obj:`str`): directory of the SED-ML file
        out_filename (:obj:`str`): path to save the results of the simulation
-       out_format (:obj:`str`): format to save the results of the simulation (e.g., `csv`)
+       out_format (:obj:`SimulationResultsFormat`): format to save the results of the simulation (e.g., `HDF5`)
     '''
+    # check that model is encoded in SBML
+    if model_sed_urn != "urn:sedml:language:sbml":
+        raise NotImplementedError("Model language with URN '{}' is not supported".format(model_sed_urn))
+
+    # check that simulation is a time course
     if not isinstance(simulation, TimecourseSimulation):
-        raise ValueError('{} is not supported'.format(simulation.__class__.__name__))
+        raise NotImplementedError('{} is not supported'.format(simulation.__class__.__name__))
 
     # check that model parameter changes have already been applied (because handled by :obj:`exec_simulations_in_archive`)
     if simulation.model_parameter_changes:
-        raise ValueError('Model parameter changes are not supported')
+        raise NotImplementedError('Model parameter changes are not supported')
+
+    # check that the desired output format is supported
+    if out_format != SimulationResultsFormat.HDF5:
+        raise NotImplementedError("Simulation results format '{}' is not supported".format(out_format))
 
     # Read the model located at `os.path.join(working_dir, model_filename)` in the format
     # with the SED URN `model_sed_urn`.
-    if model_sed_urn != "urn:sedml:language:sbml":
-        raise ValueError("Model language with URN '{}' is not supported".format(model_sed_urn))
-
     sbml_importer = amici.SbmlImporter(model_filename)
     sbml_model = sbml_importer.sbml
 
@@ -89,7 +95,7 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
     # Load the algorithm specified by `simulation.algorithm`
     algorithm_name = KISAO_ALGORITHMS_MAP.get(simulation.algorithm.kisao_term.id, None)
     if algorithm_name is None:
-        raise ValueError(
+        raise NotImplementedError(
             "Algorithm with KiSAO id '{}' is not supported".format(simulation.algorithm.kisao_term.id))
 
     solver = model.getSolver()
@@ -98,7 +104,7 @@ def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_
     for parameter_change in simulation.algorithm_parameter_changes:
         param_setter_name = KISAO_PARAMETERS_MAP.get(parameter_change.parameter.kisao_term.id, None)
         if param_setter_name is None:
-            raise ValueError(
+            raise NotImplementedError(
                 "Algorithm parameter with KiSAO id '{}' is not supported".format(parameter_change.parameter.kisao_term.id))
         param_setter = getattr(solver, param_setter_name)
         param_setter(parameter_change.value)
