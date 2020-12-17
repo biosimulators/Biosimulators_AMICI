@@ -1,1 +1,2 @@
-capturer
+biosimulators_utils[docker]
+python_dateutil
