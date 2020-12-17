@@ -88,6 +88,14 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade setuptools
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
+              g++ \
+              libatlas-base-dev \
+              swig
+
       # install package
       - name: Install the package
         run: python -m pip install .[all]
