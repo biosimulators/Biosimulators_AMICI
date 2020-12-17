@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BioSimulators-AMICI documentation &#8212; BioSimulators-AMICI 0.0.2 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation instructions" href="installation.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">BioSimulators-AMICI</a></h1>
+
+
+
+<p class="blurb">BioSimulators-compliant interface to AMICI</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=biosimulators&repo=Biosimulators_AMICI&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source/biosimulators_amici.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About BioSimulators-AMICI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://biosimulators.org">BioSimulators</a></li>
+    
+    <li class="toctree-l1"><a href="https://run.biosimulations.org">runBioSimulations</a></li>
+    
+    <li class="toctree-l1"><a href="https://biosimulations.org">BioSimulations</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="installation.html" title="next chapter">Installation instructions</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="biosimulators-amici-documentation">
+<h1>BioSimulators-AMICI documentation<a class="headerlink" href="#biosimulators-amici-documentation" title="Permalink to this headline">¶</a></h1>
+<p>BioSimulators-AMICI provides a <a class="reference external" href="https://biosimulators.org">BioSimulators</a>-compliant command-line interface to the <a class="reference external" href="https://github.com/AMICI-dev/AMICI">AMICI</a> biological simulation tool. A Docker image for this package is also available.</p>
+<p>This command-line interface and Docker image enable users to use AMICI to execute <a class="reference external" href="https://combinearchive.org/">COMBINE/OMEX archives</a> that describe one or more simulation experiments (in <a class="reference external" href="https://sed-ml.org">SED-ML format</a>) of one or more models (in <a class="reference external" href="http://sbml.org">SBML format</a>).</p>
+<p>A list of the algorithms and algorithm parameters supported by AMICI is available at <a class="reference external" href="https://biosimulators.org/simulators/amici">BioSimulators</a>.</p>
+<p>A simple web application and web service for using AMICI to execute COMBINE/OMEX archives is also available at <a class="reference external" href="https://run.biosimulations.org">runBioSimulations</a>.</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#command-line-program">Command-line program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#docker-image-with-a-command-line-entrypoint">Docker image with a command-line entrypoint</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#creating-combine-omex-archives-and-encoding-simulation-experiments-into-sed-ml">Creating COMBINE/OMEX archives and encoding simulation experiments into SED-ML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#command-line-program">Command-line program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#docker-image-with-a-command-line-entrypoint">Docker image with a command-line entrypoint</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/biosimulators_amici.html">API documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/biosimulators_amici.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/biosimulators_amici.html#module-biosimulators_amici.core">biosimulators_amici.core module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/biosimulators_amici.html#module-biosimulators_amici.data_model">biosimulators_amici.data_model module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About BioSimulators-AMICI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about.html#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#development-team">Development team</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#questions-and-comments">Questions and comments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, BioSimulators Team.
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/biosimulators/Biosimulators_AMICI" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

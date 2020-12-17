@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>biosimulators_amici package &#8212; BioSimulators-AMICI 0.0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="About BioSimulators-AMICI" href="../about.html" />
+    <link rel="prev" title="Tutorial" href="../tutorial.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">BioSimulators-AMICI</a></h1>
+
+
+
+<p class="blurb">BioSimulators-compliant interface to AMICI</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=biosimulators&repo=Biosimulators_AMICI&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-biosimulators_amici.core">biosimulators_amici.core module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-biosimulators_amici.data_model">biosimulators_amici.data_model module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About BioSimulators-AMICI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://biosimulators.org">BioSimulators</a></li>
+    
+    <li class="toctree-l1"><a href="https://run.biosimulations.org">runBioSimulations</a></li>
+    
+    <li class="toctree-l1"><a href="https://biosimulations.org">BioSimulations</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../tutorial.html" title="previous chapter">Tutorial</a></li>
+      <li>Next: <a href="../about.html" title="next chapter">About BioSimulators-AMICI</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-biosimulators_amici">
+<span id="biosimulators-amici-package"></span><h1>biosimulators_amici package<a class="headerlink" href="#module-biosimulators_amici" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-biosimulators_amici.core">
+<span id="biosimulators-amici-core-module"></span><h2>biosimulators_amici.core module<a class="headerlink" href="#module-biosimulators_amici.core" title="Permalink to this headline">¶</a></h2>
+<p>Methods for executing SED tasks in COMBINE archives and saving their outputs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Jonathan Karr &lt;<a class="reference external" href="mailto:karr&#37;&#52;&#48;mssm&#46;edu">karr<span>&#64;</span>mssm<span>&#46;</span>edu</a>&gt;</p>
+</dd>
+<dt class="field-even">Date</dt>
+<dd class="field-even"><p>2020-12-16</p>
+</dd>
+<dt class="field-odd">Copyright</dt>
+<dd class="field-odd"><p>2020, BioSimulators Team</p>
+</dd>
+<dt class="field-even">License</dt>
+<dd class="field-even"><p>MIT</p>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="biosimulators_amici.core.cleanup_model">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">cleanup_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_name</span></em>, <em class="sig-param"><span class="n">model_dir</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.cleanup_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cleanup model created with <a class="reference internal" href="#biosimulators_amici.core.import_model_from_sbml" title="biosimulators_amici.core.import_model_from_sbml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_model_from_sbml</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_name</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – name of the Python module for model</p></li>
+<li><p><strong>model_dir</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – directory which contains the files for the model</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.config_task">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">config_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">task</span></em>, <em class="sig-param"><span class="n">model</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.config_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure an AMICI model for a SED task</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code>) – task</p></li>
+<li><p><strong>model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.ModelPtr</span></code>) – AMICI model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>solver</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.SolverPtr</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – the task involves and unsupported algorithm or parameter</p></li>
+<li><p><strong>ValueError</strong> – the task involves an invalid value of a parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.exec_sed_task">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">exec_sed_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">task</span></em>, <em class="sig-param"><span class="n">variables</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.exec_sed_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a task and save its results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code>) – task</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results of variables</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariableResults</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.exec_sedml_docs_in_combine_archive">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">exec_sedml_docs_in_combine_archive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">archive_filename</span></em>, <em class="sig-param"><span class="n">out_dir</span></em>, <em class="sig-param"><span class="n">report_formats</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plot_formats</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bundle_outputs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">keep_individual_outputs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.exec_sedml_docs_in_combine_archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the SED tasks defined in a COMBINE/OMEX archive and save the outputs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>archive_filename</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – path to COMBINE/OMEX archive</p></li>
+<li><p><strong>out_dir</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – <p>path to store the outputs of the archive</p>
+<ul>
+<li><p>CSV: directory in which to save outputs to files
+<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">out_dir</span> <span class="pre">}/{</span> <span class="pre">relative-path-to-SED-ML-file-within-archive</span> <span class="pre">}/{</span> <span class="pre">report.id</span> <span class="pre">}.csv</span></code></p></li>
+<li><p>HDF5: directory in which to save a single HDF5 file (<code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">out_dir</span> <span class="pre">}/reports.h5</span></code>),
+with reports at keys <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">relative-path-to-SED-ML-file-within-archive</span> <span class="pre">}/{</span> <span class="pre">report.id</span> <span class="pre">}</span></code> within the HDF5 file</p></li>
+</ul>
+</p></li>
+<li><p><strong>report_formats</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">ReportFormat</span></code>, optional) – report format (e.g., csv or h5)</p></li>
+<li><p><strong>plot_formats</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotFormat</span></code>, optional) – report format (e.g., pdf)</p></li>
+<li><p><strong>bundle_outputs</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code>, optional) – if <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, bundle outputs into archives for reports and plots</p></li>
+<li><p><strong>keep_individual_outputs</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code>, optional) – if <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, keep individual output files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.exec_task">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">exec_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">solver</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.exec_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a SED task for an AMICI model and return its results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.ModelPtr</span></code>) – AMICI model</p></li>
+<li><p><strong>solver</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.SolverPtr</span></code>) – solver</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>simulation results</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.numpy.ReturnDataView</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.extract_variables_from_results">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">extract_variables_from_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">sbml_model</span></em>, <em class="sig-param"><span class="n">variables</span></em>, <em class="sig-param"><span class="n">target_x_paths_ids</span></em>, <em class="sig-param"><span class="n">results</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.extract_variables_from_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract data generator variables from results</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.ModelPtr</span></code>) – AMICI model</p></li>
+<li><p><strong>sbml_model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">libsbml.Model</span></code>) – SBML model</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+<li><p><strong>target_x_paths_ids</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> to <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – dictionary that maps each XPath to the
+value of the attribute of the object in the XML file that matches the XPath</p></li>
+<li><p><strong>results</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.numpy.ReturnDataView</span></code>) – simulation results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results of variables</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariableResults</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>NotImplementedError</strong> – if a symbol could not be recorded</p></li>
+<li><p><strong>ValueError</strong> – if a target could not be recorded</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.import_model_from_sbml">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">import_model_from_sbml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">variables</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.import_model_from_sbml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate an AMICI model from a SBML file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – path to SBML file</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – ids of SBML objects to observe</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.ModelPtr</span></code>: AMICI model</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">libsbml.Model</span></code>: SBML model</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>: name of the Python module for model</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>: directory which contains the files for the model</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="biosimulators_amici.core.validate_sed_task">
+<code class="sig-prename descclassname">biosimulators_amici.core.</code><code class="sig-name descname">validate_sed_task</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">task</span></em>, <em class="sig-param"><span class="n">variables</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/biosimulators_amici/core.py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#biosimulators_amici.core.validate_sed_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that AMICI can support a SED task</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code>) – task</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>dictionary that maps each XPath to the</dt><dd><p>value of the attribute of the object in the XML file that matches the XPath</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> to <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-biosimulators_amici.data_model">
+<span id="biosimulators-amici-data-model-module"></span><h2>biosimulators_amici.data_model module<a class="headerlink" href="#module-biosimulators_amici.data_model" title="Permalink to this headline">¶</a></h2>
+<p>Mappings from KiSAO terms to methods and arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p>Jonathan Karr &lt;<a class="reference external" href="mailto:karr&#37;&#52;&#48;mssm&#46;edu">karr<span>&#64;</span>mssm<span>&#46;</span>edu</a>&gt;</p>
+</dd>
+<dt class="field-even">Date</dt>
+<dd class="field-even"><p>2020-12-16</p>
+</dd>
+<dt class="field-odd">Copyright</dt>
+<dd class="field-odd"><p>2020, BioSimulators Team</p>
+</dd>
+<dt class="field-even">License</dt>
+<dd class="field-even"><p>MIT</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, BioSimulators Team.
+      
+      |
+      <a href="../_sources/source/biosimulators_amici.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/biosimulators/Biosimulators_AMICI" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
