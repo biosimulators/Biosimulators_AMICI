@@ -1,7 +1,7 @@
 # Base OS
 FROM python:3.7.9-slim-buster
 
-ARG VERSION="0.0.1"
+ARG VERSION="0.0.2"
 ARG SIMULATOR_VERSION="0.11.11"
 
 # metadata
@@ -32,6 +32,7 @@ LABEL \
 # Install requirements
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
+        g++ \
         libatlas-base-dev \
         swig \
     && apt-get autoremove -y \
@@ -39,15 +40,8 @@ RUN apt-get update -y \
 
 # Copy code for command-line interface into image and install it
 COPY . /root/Biosimulators_amici
-RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-        g++ \
-    && pip install /root/Biosimulators_amici \
-    && rm -rf /root/Biosimulators_amici \
-    && apt-get remove -y \
-        g++ \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install /root/Biosimulators_amici \
+    && rm -rf /root/Biosimulators_amici
 RUN pip install amici==${SIMULATOR_VERSION}
 
 # Entrypoint
