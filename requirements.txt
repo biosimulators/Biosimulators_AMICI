@@ -1,5 +1,4 @@
 amici
-Biosimulations_utils
-cement
+biosimulators_utils >= 0.1.10
 numpy
-pandas
+sympy >= 1.7

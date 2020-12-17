@@ -1,138 +1,284 @@
 """ Methods for executing SED tasks in COMBINE archives and saving their outputs
 
 :Author: Jonathan Karr <karr@mssm.edu>
-:Date: 2020-10-29
-:Copyright: 2020, Center for Reproducible Biomedical Modeling
+:Date: 2020-12-16
+:Copyright: 2020, BioSimulators Team
 :License: MIT
 """
 
-from Biosimulations_utils.simulation.data_model import TimecourseSimulation, SimulationResultsFormat
-from Biosimulations_utils.simulator.utils import exec_simulations_in_archive
+from .data_model import KISAO_ALGORITHMS_MAP, KISAO_PARAMETERS_MAP
+from biosimulators_utils.combine.exec import exec_sedml_docs_in_archive
+from biosimulators_utils.plot.data_model import PlotFormat  # noqa: F401
+from biosimulators_utils.report.data_model import ReportFormat, DataGeneratorVariableResults  # noqa: F401
+from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTimeCourseSimulation,  # noqa: F401
+                                                  DataGeneratorVariable, DataGeneratorVariableSymbol)
+from biosimulators_utils.sedml import validation
+from biosimulators_utils.utils.core import validate_str_value, parse_value
 import amici
 import importlib.util
 import numpy
 import os.path
-import pandas
-import shutils
+import shutil
 import sys
 import tempfile
 
-__all__ = ['exec_combine_archive', 'exec_simulation']
 
-KISAO_ALGORITHMS_MAP = {
-    'KISAO_0000496': 'CVODES',
-}
+__all__ = [
+    'exec_sedml_docs_in_combine_archive',
+    'exec_sed_task',
+    'validate_sed_task',
+    'import_model_from_sbml',
+    'cleanup_model',
+    'config_task',
+    'exec_task',
+    'extract_variables_from_results',
+]
 
-KISAO_PARAMETERS_MAP = {
-    'KISAO_0000209': 'setRelativeTolerance',
-    'KISAO_0000211': 'setAbsoluteTolerance',
-    'KISAO_0000415': 'setMaxSteps',
-    'KISAO_0000543': 'setStabilityLimitFlag',
-}
 
-
-def exec_combine_archive(archive_file, out_dir):
-    """ Execute the SED tasks defined in a COMBINE archive and save the outputs
+def exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
+                                       report_formats=None, plot_formats=None,
+                                       bundle_outputs=None, keep_individual_outputs=None):
+    """ Execute the SED tasks defined in a COMBINE/OMEX archive and save the outputs
 
     Args:
-        archive_file (:obj:`str`): path to COMBINE archive
-        out_dir (:obj:`str`): directory to store the outputs of the tasks
+        archive_filename (:obj:`str`): path to COMBINE/OMEX archive
+        out_dir (:obj:`str`): path to store the outputs of the archive
+
+            * CSV: directory in which to save outputs to files
+              ``{ out_dir }/{ relative-path-to-SED-ML-file-within-archive }/{ report.id }.csv``
+            * HDF5: directory in which to save a single HDF5 file (``{ out_dir }/reports.h5``),
+              with reports at keys ``{ relative-path-to-SED-ML-file-within-archive }/{ report.id }`` within the HDF5 file
+
+        report_formats (:obj:`list` of :obj:`ReportFormat`, optional): report format (e.g., csv or h5)
+        plot_formats (:obj:`list` of :obj:`PlotFormat`, optional): report format (e.g., pdf)
+        bundle_outputs (:obj:`bool`, optional): if :obj:`True`, bundle outputs into archives for reports and plots
+        keep_individual_outputs (:obj:`bool`, optional): if :obj:`True`, keep individual output files
     """
-    exec_simulations_in_archive(archive_file, exec_simulation, out_dir, apply_model_changes=True)
+    exec_sedml_docs_in_archive(archive_filename, exec_sed_task, out_dir,
+                               apply_xml_model_changes=True,
+                               report_formats=report_formats,
+                               plot_formats=plot_formats,
+                               bundle_outputs=bundle_outputs,
+                               keep_individual_outputs=keep_individual_outputs)
 
 
-def exec_simulation(model_filename, model_sed_urn, simulation, working_dir, out_filename, out_format):
-    ''' Execute a simulation and save its results
+def exec_sed_task(task, variables):
+    ''' Execute a task and save its results
 
     Args:
-       model_filename (:obj:`str`): path to the model
-       model_sed_urn (:obj:`str`): SED URN for the format of the model (e.g., `urn:sedml:language:sbml`)
-       simulation (:obj:`TimecourseSimulation`): simulation
-       working_dir (:obj:`str`): directory of the SED-ML file
-       out_filename (:obj:`str`): path to save the results of the simulation
-       out_format (:obj:`SimulationResultsFormat`): format to save the results of the simulation (e.g., `HDF5`)
+       task (:obj:`Task`): task
+       variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+
+    Returns:
+        :obj:`DataGeneratorVariableResults`: results of variables
     '''
-    # check that model is encoded in SBML
-    if model_sed_urn != "urn:sedml:language:sbml":
-        raise NotImplementedError("Model language with URN '{}' is not supported".format(model_sed_urn))
+    target_x_paths_ids = validate_sed_task(task, variables)
 
-    # check that simulation is a time course
-    if not isinstance(simulation, TimecourseSimulation):
-        raise NotImplementedError('{} is not supported'.format(simulation.__class__.__name__))
+    # Read the model for the task
+    model, sbml_model, model_name, model_dir = import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
 
-    # check that model parameter changes have already been applied (because handled by :obj:`exec_simulations_in_archive`)
-    if simulation.model_parameter_changes:
-        raise NotImplementedError('Model parameter changes are not supported')
+    # Configure task
+    solver = config_task(task, model)
 
-    # check that the desired output format is supported
-    if out_format != SimulationResultsFormat.HDF5:
-        raise NotImplementedError("Simulation results format '{}' is not supported".format(out_format))
+    # Run simulation using default model parameters and solver options
+    results = exec_task(model, solver)
 
-    # Read the model located at `os.path.join(working_dir, model_filename)` in the format
-    # with the SED URN `model_sed_urn`.
-    sbml_importer = amici.SbmlImporter(model_filename)
+    # Save a report of the results of the simulation with `simulation.num_time_points` time points
+    # beginning at `simulation.output_start_time` to `out_filename` in `out_format` format.
+    # This should save all of the variables specified by `simulation.model.variables`.
+    variable_results = extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results)
+
+    # cleanup module and temporary directory
+    cleanup_model(model_name, model_dir)
+
+    # return results
+    return variable_results
+
+
+def validate_sed_task(task, variables):
+    """ Validate that AMICI can support a SED task
+
+    Args:
+       task (:obj:`Task`): task
+       variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+
+    Returns:
+        :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps each XPath to the
+            value of the attribute of the object in the XML file that matches the XPath
+    """
+    validation.validate_task(task)
+    validation.validate_model_language(task.model.language, ModelLanguage.SBML)
+    validation.validate_model_change_types(task.model.changes, ())
+    validation.validate_simulation_type(task.simulation, (UniformTimeCourseSimulation, ))
+    validation.validate_uniform_time_course_simulation(task.simulation)
+    validation.validate_data_generator_variables(variables)
+    return validation.validate_data_generator_variable_xpaths(variables, task.model.source, attr='id')
+
+
+def import_model_from_sbml(filename, variables):
+    """ Generate an AMICI model from a SBML file
+
+    Args:
+        filename (:obj:`str`): path to SBML file
+        variables (:obj:`list` of :obj:`str`): ids of SBML objects to observe
+
+    Returns:
+        :obj:`tuple`:
+
+            * :obj:`amici.amici.ModelPtr`: AMICI model
+            * :obj:`libsbml.Model`: SBML model
+            * :obj:`str`: name of the Python module for model
+            * :obj:`str`: directory which contains the files for the model
+    """
+    sbml_importer = amici.SbmlImporter(filename)
     sbml_model = sbml_importer.sbml
 
-    model_output_dir = tempfile.mkdtemp()
-    model_name = 'biosimulators_amici_model_' + os.path.basename(model_output_dir)
-    constant_parameters = [param.getId() for param in sbml_model.parameters]
-    observables = {var.id: {'name': var.name or var.id, 'formula': var.id} for var in simulation.model.variables}
+    model_dir = tempfile.mkdtemp()
+    model_name = 'biosimulators_amici_model_' + os.path.basename(model_dir)
+    constant_parameters = [param.getId() for param in sbml_model.parameters if param.constant]
+    observables = {var: {'name': var, 'formula': var} for var in variables}
     sbml_importer.sbml2amici(model_name,
-                             model_output_dir,
+                             model_dir,
                              observables=observables,
                              constant_parameters=constant_parameters)
 
-    model_module_spec = importlib.util.spec_from_file_location(model_name, os.path.join(model_output_dir, model_name, '__init__.py'))
+    model_module_spec = importlib.util.spec_from_file_location(model_name, os.path.join(model_dir, model_name, '__init__.py'))
     model_module = importlib.util.module_from_spec(model_module_spec)
     sys.modules[model_name] = model_module
     model_module_spec.loader.exec_module(model_module)
     model = model_module.getModel()
 
-    # Simulate the model from `simulation.start_time` to `simulation.end_time`
-    model.setT0(simulation.start_time)
-    model.setTimepoints(numpy.linspace(simulation.output_start_time, simulation.end_time, simulation.num_time_points + 1))
+    return (model, sbml_model, model_name, model_dir)
 
-    # Load the algorithm specified by `simulation.algorithm`
-    algorithm_name = KISAO_ALGORITHMS_MAP.get(simulation.algorithm.kisao_term.id, None)
+
+def cleanup_model(model_name, model_dir):
+    """ Cleanup model created with :obj:`import_model_from_sbml`
+
+    Args:
+        model_name (:obj:`str`): name of the Python module for model
+        model_dir (:obj:`str`): directory which contains the files for the model
+    """
+    sys.modules.pop(model_name)
+    shutil.rmtree(model_dir)
+
+
+def config_task(task, model):
+    """ Configure an AMICI model for a SED task
+
+    Args:
+        task (:obj:`Task`): task
+        model (:obj:`amici.amici.ModelPtr`): AMICI model
+
+    Returns:
+        :obj:`amici.amici.SolverPtr`: solver
+
+    Raises:
+        :obj:`NotImplementedError`: the task involves and unsupported algorithm or parameter
+        :obj:`ValueError`: the task involves an invalid value of a parameter
+    """
+    # Simulate the model from `initial_time` to `output_end_time`
+    # record results from `output_start_time` to `output_end_time`
+    sim = task.simulation
+    model.setT0(sim.initial_time)
+    model.setTimepoints(numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1))
+
+    # Load the algorithm specified by `sim.algorithm`
+    algorithm_name = KISAO_ALGORITHMS_MAP.get(sim.algorithm.kisao_id, None)
     if algorithm_name is None:
         raise NotImplementedError(
-            "Algorithm with KiSAO id '{}' is not supported".format(simulation.algorithm.kisao_term.id))
+            "Algorithm with KiSAO id '{}' is not supported".format(sim.algorithm.kisao_id))
 
     solver = model.getSolver()
 
-    # Apply the algorithm parameter changes specified by `simulation.algorithm_parameter_changes`
-    for parameter_change in simulation.algorithm_parameter_changes:
-        param_setter_name = KISAO_PARAMETERS_MAP.get(parameter_change.parameter.kisao_term.id, None)
-        if param_setter_name is None:
+    # Apply the algorithm parameter changes specified by `sim.algorithm_parameter_changes`
+    for change in sim.algorithm.changes:
+        param_props = KISAO_PARAMETERS_MAP.get(change.kisao_id, None)
+        if param_props is None:
             raise NotImplementedError(
-                "Algorithm parameter with KiSAO id '{}' is not supported".format(parameter_change.parameter.kisao_term.id))
-        param_setter = getattr(solver, param_setter_name)
-        param_setter(parameter_change.value)
+                "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id))
+        param_setter = getattr(solver, param_props['name'])
 
-    # Run simulation using default model parameters and solver options
-    results = amici.runAmiciSimulation(model, solver)
+        value = change.new_value
+        if not validate_str_value(value, param_props['type']):
+            raise ValueError("'{}' is not a valid {} value for parameter {}".format(
+                value, param_props['type'].name, change.kisao_id))
 
-    # Save a report of the results of the simulation with `simulation.num_time_points` time points
-    # beginning at `simulation.output_start_time` to `out_filename` in `out_format` format.
-    # This should save all of the variables specified by `simulation.model.variables`.
-    results_matrix = numpy.zeros((simulation.num_time_points + 1, len(simulation.model.variables) + 1))
-    results_matrix[:, 0] = results['ts']
+        param_setter(parse_value(value, param_props['type']))
 
-    state_ids = model.getStateIds()
-    var_ids = sorted([var.id for var in simulation.model.variables])
+    # return solver
+    return solver
 
-    unpredicted_vars = set(var_ids).difference(state_ids)
-    if unpredicted_vars:
-        raise ValueError('The simulation did not record the following required outputs:\n  - {}'.format(
-            '\n  - '.join(sorted(unpredicted_vars))))
 
-    for i_var, var_id in enumerate(var_ids):
-        i_state = state_ids.index(var_id)
-        results_matrix[:, i_var + 1] = results['x'][:, i_state]
+def exec_task(model, solver):
+    """ Execute a SED task for an AMICI model and return its results
 
-    results_df = pandas.DataFrame(results_matrix, columns=var_ids)
-    results_df.to_csv(out_filename, index=False)
+    Args:
+        model (:obj:`amici.amici.ModelPtr`): AMICI model
+        solver (:obj:`amici.amici.SolverPtr`): solver
 
-    # cleanup module and temporary directory
-    sys.modules.pop(model_name)
-    shutils.rmdir(model_output_dir)
+    Returns:
+        :obj:`amici.numpy.ReturnDataView`: simulation results
+    """
+    return amici.runAmiciSimulation(model, solver)
+
+
+def extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results):
+    """ Extract data generator variables from results
+
+    Args:
+        model (:obj:`amici.amici.ModelPtr`): AMICI model
+        sbml_model (:obj:`libsbml.Model`): SBML model
+        variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+        target_x_paths_ids (:obj:`dict` of :obj:`str` to :obj:`str`): dictionary that maps each XPath to the
+            value of the attribute of the object in the XML file that matches the XPath
+        results (:obj:`amici.numpy.ReturnDataView`): simulation results
+
+    Returns:
+        :obj:`DataGeneratorVariableResults`: results of variables
+
+    Raises:
+        :obj:`NotImplementedError`: if a symbol could not be recorded
+        :obj:`ValueError`: if a target could not be recorded
+    """
+    var_id_to_state_index = {id: index for index, id in enumerate(model.getStateIds())}
+
+    variable_results = DataGeneratorVariableResults()
+    unpredicted_symbols = []
+    unpredicted_targets = []
+    for variable in variables:
+        if variable.symbol:
+            if variable.symbol == DataGeneratorVariableSymbol.time:
+                variable_results[variable.id] = results['ts']
+            else:
+                unpredicted_symbols.append(variable.symbol)
+
+        else:
+            var_id = target_x_paths_ids.get(variable.target, None)
+            i_state = var_id_to_state_index.get(var_id, None)
+            if i_state is None:
+                unpredicted_targets.append(variable.target)
+            else:
+                variable_results[variable.id] = results['x'][:, i_state]
+
+    if unpredicted_symbols:
+        raise NotImplementedError("".join([
+            "The following variable symbols are not supported:\n  - {}\n\n".format(
+                '\n  - '.join(sorted(unpredicted_symbols)),
+            ),
+            "Symbols must be one of the following:\n  - {}".format(DataGeneratorVariableSymbol.time),
+        ]))
+
+    if unpredicted_targets:
+        raise ValueError(''.join([
+            'The following variable targets could not be recorded:\n  - {}\n\n'.format(
+                '\n  - '.join(sorted(unpredicted_targets)),
+            ),
+            'Targets must have one of the following ids:\n  - {}'.format(
+                '\n  - '.join(sorted((
+                    [s.getId() for s in sbml_model.species]
+                    + [p.getId() for p in sbml_model.parameters]
+                ))),
+            ),
+        ]))
+
+    return variable_results

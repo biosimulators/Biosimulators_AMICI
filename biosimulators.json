@@ -1,11 +1,11 @@
 {
   "id": "amici",
   "name": "AMICI",
-  "version": "0.11.8",
+  "version": "0.11.11",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
   "urls": [{"type": "Home page", "url": "https://github.com/AMICI-dev/amici"}],
   "image": {
-    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.8",
+    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.11",
     "format": {
       "namespace": "EDAM",
       "id": "format_3973", "version": null, "supportedFeatures": []
@@ -243,7 +243,7 @@
           "type": "float",
           "value": "1e-8",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+                    "availableSoftwareInterfaceTypes": ["library"]
         },
         {
           "kisaoId": {
@@ -255,7 +255,7 @@
           "type": "float",
           "value": "1e-16",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+                    "availableSoftwareInterfaceTypes": ["library"]
         },
         {
           "kisaoId": {
@@ -267,7 +267,7 @@
           "type": "integer",
           "value": "10000",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+                    "availableSoftwareInterfaceTypes": ["library"]
         },
         {
           "kisaoId": {
@@ -279,10 +279,10 @@
           "type": "boolean",
           "value": "true",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+                    "availableSoftwareInterfaceTypes": ["library"]
         }
       ],
-      "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"],
+      "availableSoftwareInterfaceTypes": ["library"],
       "dependencies": [{
         "name": "SUNDIALS",
         "version": null,

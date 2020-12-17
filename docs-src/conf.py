@@ -18,7 +18,7 @@ source_dir = os.path.join(os.path.dirname(__file__), '..', 'biosimulators_amici'
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # -- Project information -----------------------------------------------------
-source_base_url = 'https://github.com/biosimulators/BioSimulators_AMICI/blob/dev/'
+source_base_url = 'https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/'
 project = 'BioSimulators-AMICI'
 copyright = '{}, BioSimulators Team'.format(datetime.datetime.now().year)
 author = 'BioSimulators Team'
@@ -103,7 +103,7 @@ html_static_path = ['_static']
 
 html_theme_options = {
     'github_user': 'biosimulators',
-    'github_repo': 'BioSimulators_AMICI',
+    'github_repo': 'Biosimulators_AMICI',
     'github_banner': True,
     'github_button': True,
     'description': 'BioSimulators-compliant interface to AMICI',

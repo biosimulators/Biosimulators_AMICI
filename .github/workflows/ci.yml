@@ -1,151 +1,326 @@
-name: Test package, build image, and push image to GitHub Container Registry and BioSimulators
+name: Continuous integration
 
 on:
-  - push
-  - pull_request
-  - release:
-      types: [published]
+  push:
+  workflow_dispatch:
+    inputs:
+      simulatorVersion:
+        description: New version of the underlying simulation tool (e.g., '1.5.6')
+        required: true
+      simulatorVersionLatest:
+        description: Is this version the latest version of the underlying simulation tool ("true" or "false")?
+        required: false
 
 jobs:
-  init:
-    name: Checkout repository and get simulator id and version
+  continuousIntegration:
+    name: Update simulator version, lint, test, compile documentation, and release
     runs-on: ubuntu-latest
+    outputs:
+      mainBranch: ${{ steps.get-main-branch.outputs.mainBranch }}
+      mainBranchRef: ${{ steps.get-main-branch.outputs.mainBranchRef }}
+      mainBranchHeadRevision: ${{ steps.get-main-branch.outputs.mainBranchHeadRevision }}
+      version: ${{ steps.get-version-number.outputs.version }}
+      simulatorId: ${{ steps.get-docker-image-tag.outputs.simulatorId }}
+      simulatorVersion: ${{ steps.get-docker-image-tag.outputs.simulatorVersion }}
+      simulatorName: ${{ steps.get-docker-image-tag.outputs.simulatorName }}
+      dockerImageBaseUrl: ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}
+      dockerRegistry: ${{ steps.get-docker-image-tag.outputs.dockerRegistry }}
+      release: ${{ steps.determine-if-release-needed.outputs.release }}
+      docsChanged: ${{ steps.commit-docs.outputs.docsChanged }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 1
-      - name: Get simulator id and version from specifications
-        working-directory: ${GITHUB_WORKSPACE}
+      - name: Clone repository
         run: |
-          export IMAGE_ID_VERSION=$(python <<EOF
-          import json
-          import os
-          with open('biosimulators.json', 'r') as file:
-            specs = json.load(file)
-          print((specs['id'] + ':' + specs['version']).lower())
-          EOF
-          )
-          IFS=":" read -a tmp <<< "$IMAGE_ID_VERSION"
-          unset IFS
-          export IMAGE_ID=${tmp[0]}
-          export IMAGE_VERSION=${tmp[1]}
+          git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} .
 
-  build-tag-image:
-    name: Build and tag image
-    needs: checkout
-    runs-on: ubuntu-latest
-    steps:
-      - working-directory: ${GITHUB_WORKSPACE}
+      - id: get-main-branch
+        name: Determine main branch
         run: |
-          export tag=ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${IMAGE_ID_VERSION}
-          export tag=$(echo "$tag" | tr '[:upper:]' '[:lower:]')
-          docker build \
-            -f Dockerfile \
-            . \
-            --tag "$tag"
+          mainBranch=$(git symbolic-ref refs/remotes/origin/HEAD | cut -d '/' -f 4)
+          mainBranchHeadRevision=$(git rev-parse refs/remotes/origin/${mainBranch})
+          echo "::set-output name=mainBranch::$mainBranch"
+          echo "::set-output name=mainBranchRef::refs/heads/$mainBranch"
+          echo "::set-output name=mainBranchHeadRevision::$mainBranchHeadRevision"
 
-  install-package:
-    name: Install package 
-    needs: build-tag-image
-    runs-on: ubuntu-latest
-    steps:
+      - name: Checkout ref
+        run: |
+          if [[ "${{ github.ref }}" =~ ^refs/heads/ ]]; then
+            branch=$(echo "${{ github.ref }}" | cut -d'/' -f 3-)
+            git checkout ${branch}
+          else
+            git checkout ${{ github.ref }}
+          fi
+
+      #############################################
+      ## Update the version of the simulator
+      #############################################
+      - name: Update the version of the simulator
+        if: github.event.inputs.simulatorVersion
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends jq moreutils
+
+          IMAGE_BASE_URL=$(jq -r '.image.url' biosimulators.json | cut -d : -f 1)
+          jq ".version = \"${{ github.event.inputs.simulatorVersion }}\"" biosimulators.json | sponge biosimulators.json
+          jq ".image.url = \"${IMAGE_BASE_URL}:${{ github.event.inputs.simulatorVersion }}\"" biosimulators.json | sponge biosimulators.json
+
+          sed -i -E \
+            "s/SIMULATOR_VERSION=([^ \n]+|\".*?\")/SIMULATOR_VERSION=\"${{ github.event.inputs.simulatorVersion }}\"/" \
+            Dockerfile
+
+      #############################################
+      ## Install package and its dependencies
+      #############################################
       - name: Install Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
+
       - name: Setup pip cache
         uses: actions/cache@v2
         with:
           path: /opt/hostedtoolcache/Python
-          key: ${{ runner.os }}-pip-${{ hashFiles('${GITHUB_WORKSPACE}/requirements.txt') }}-${{ hashFiles('${GITHUB_WORKSPACE}/requirements.optional.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements.optional.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Install pip, setuptools, and test utilities
+
+      - name: Install pip and setuptools
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade setuptools
-      - name: Install additional dependencies
-        run: |
-          apt-get install -y --no-install-recommends \
-            g++ \
-            libatlas-base-dev \
-            swig
-      - name: Install package
-        working-directory: ${GITHUB_WORKSPACE} 
-        run: |
-          python -m pip install .[all]
 
-  lint:
-    name: Lint package and tests
-    needs: install-package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install requirements
+      # install package
+      - name: Install the package
+        run: python -m pip install .[all]
+
+      #############################################
+      ## Lint
+      #############################################
+      - name: Install flake8
         run: python -m pip install flake8
-      - name: Lint
-        run: python -m flake8 --ignore=E501 .
 
-  test:
-    name: Test command-line interface and container
-    needs: install-package
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install requirements
+      - name: Lint the package
+        run: python -m flake8
+
+      #############################################
+      ## Build Docker image
+      #############################################
+      - id: get-version-number
+        name: Get version number
+        env:
+          TAG: ${{ github.ref }}
+        run: |
+          if [[ "${TAG}" =~ ^refs/tags/ ]]; then
+            version="${TAG/refs\/tags\//}"
+          else
+            versionFileDir=$(find -name _version.py | rev | cut -d / -f 2- | rev)
+            version=$(PYTHONPATH=$versionFileDir python -c "import _version; print(_version.__version__)")
+          fi
+
+          echo "::set-output name=version::$version"
+
+      - id: get-docker-image-tag
+        name: Determine Docker image tag
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends jq
+
+          SIMULATOR_ID=$(jq -r '.id' biosimulators.json)
+          SIMULATOR_VERSION=$(jq -r '.version' biosimulators.json)
+          SIMULATOR_NAME=$(jq -r '.name' biosimulators.json)
+          IMAGE_BASE_URL=$(jq -r '.image.url' biosimulators.json | cut -d : -f 1)
+          DOCKER_REGISTRY=$(echo $IMAGE_BASE_URL | cut -d / -f 1)
+
+          echo "::set-output name=simulatorId::${SIMULATOR_ID}"
+          echo "::set-output name=simulatorVersion::${SIMULATOR_VERSION}"
+          echo "::set-output name=simulatorName::${SIMULATOR_NAME}"
+          echo "::set-output name=dockerImageBaseUrl::${IMAGE_BASE_URL}"
+          echo "::set-output name=dockerRegistry::${DOCKER_REGISTRY}"
+
+      - name: Build Docker image
+        run: |
+          REVISION=$(git rev-parse HEAD)
+          docker build \
+            --label org.opencontainers.image.source=https://github.com/${{ github.repository }} \
+            --label org.opencontainers.image.revision=${REVISION} \
+            --build-arg VERSION=${{ steps.get-version-number.outputs.version }} \
+            --build-arg SIMULATOR_VERSION=${{ steps.get-docker-image-tag.outputs.simulatorVersion }} \
+            --tag ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}:${{ steps.get-docker-image-tag.outputs.simulatorVersion }} \
+            --tag ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}:latest \
+            .
+
+      #############################################
+      ## Test and upload coverage report to Codecov
+      #############################################
+      - name: Install pytest
         run: python -m pip install pytest pytest-cov
-      - name: Test
-        run: python -m pytest tests --cov
 
-  compile-docs:
-    name: Compile documentation and push to repository
-    needs: install-package
-    runs-on: ubuntu-latest
-    steps:
-      - id: check_docs
-        name: Check there are docs
-        uses: andstor/file-existence-action@v1
-        working-directory: ${GITHUB_WORKSPACE}
+      - name: Install the requirements for the tests
+        run: python -m pip install .[tests]
+
+      - name: Run the tests
+        run: python -m pytest tests/ --cov=./ --cov-report=xml
+
+      - name: Upload the coverage report to Codecov
+        uses: codecov/codecov-action@v1.0.3
         with:
-          files: "docs"
-      - name: Install requirements
-        if: steps.check_docs.outputs.files_exists == 'true'
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
+          file: ./coverage.xml
+
+      #############################################
+      ## Compile documentation
+      #############################################
+      - name: Install the requirements for compiling the documentation
         run: python -m pip install -r docs-src/requirements.txt
-      - name: Compile documentation
-        if: steps.check_docs.outputs.files_exists == 'true'
-        working-directory: ${GITHUB_WORKSPACE}
+
+      - name: Compile the documentation
         run: |
           sphinx-apidoc . setup.py --output-dir docs-src/source --force --module-first --no-toc
+          mkdir -p docs-src/_static
           sphinx-build docs-src docs
-      - name: Push docs to repository
-        if: steps.check_docs.outputs.files_exists == 'true' && github.ref == 'refs/heads/dev'
-        uses: peter-evans/create-pull-request@v3
-        with:
-          branch: dev-docs
-          base: dev
-          commit-message: "Updated docs"
 
-  push-image:
-    name: Push image to GitHub Container Registry
-    needs: [lint, test, compile-docs]
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - working-directory: ${GITHUB_WORKSPACE}
+      #############################################
+      ## Commit and push new version of simulator
+      #############################################
+      # If new version of simulator, commit and push the new version
+      - name: Commit the revised version of the simulator
+        if: github.event.inputs.simulatorVersion && github.event.inputs.simulatorVersionLatest == 'true'
         run: |
-          docker login ghcr.io --username ${{ github.actor }} --password ${{ github.token }}
-          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${IMAGE_ID_VERSION}
+          git config --local user.email "biosimulators.daemon@gmail.com"
+          git config --local user.name "biosimulatorsdaemon"
+          git config pull.rebase false
+          git stash -- biosimulators.json Dockerfile
+          git clean -f -d
+          git checkout .
+          git pull
+          git stash pop
+          git add biosimulators.json Dockerfile
+          git commit -m "Updating version of simulator"
 
-  submit-biosimulators:
-    name: Submit image to BioSimulators
-    needs: push-image
-    if: github.event_name == 'release'
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
+      - name: Push the revised version of the simulator
+        if: github.event.inputs.simulatorVersion && github.event.inputs.simulatorVersionLatest == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      #############################################
+      ## Release
+      #############################################
+
+      - id: determine-if-release-needed
+        name: Determine if a release should be made
+        run: |
+          release="0"
+
+          if [ ! -z "${{ github.event.inputs.simulatorVersion }}" ]; then
+            if [ "${{ github.ref }}" == "${{ steps.get-main-branch.outputs.mainBranchRef }}" ]; then
+              release="1"
+            fi
+          fi
+
+          if [[ "${{ github.ref }}" =~ ^refs/tags/ ]]; then
+            tag_hash=$(git rev-parse "${{ github.ref }}")
+            if [ "$tag_hash" == "${{ steps.get-main-branch.outputs.mainBranchHeadRevision }}" ]; then
+              release="1"
+            fi
+          fi
+
+          echo "::set-output name=release::$release"
+
+      # If new tag, commit and push documentation
+      - id: commit-docs
+        name: Commit the compiled documentation
+        if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1'
+        run: |
+          git config --local user.email "biosimulators.daemon@gmail.com"
+          git config --local user.name "biosimulatorsdaemon"
+          git config pull.rebase false
+          git stash
+          git checkout ${{ steps.get-main-branch.outputs.mainBranch }}
+          git pull
+          set +e
+          git stash pop
+          git add docs
+          git commit -m "Updating compiled documentation"
+          git checkout .
+          git clean -f -d
+          if [[ $? = 0 ]]; then
+            docsChanged=1
+          else
+            docsChanged=0
+          fi
+          echo "::set-output name=docsChanged::$docsChanged"
+
+      - name: Push the compiled documentation
+        if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1' && steps.commit-docs.outputs.docsChanged == '1'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.get-main-branch.outputs.mainBranch }}
+
+      # Create GitHub release
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get-version-number.outputs.version }}
+          release_name: Release ${{ steps.get-version-number.outputs.version }}
+
+      # Create PyPI release
+      - name: Create PyPI release
+        if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          # Install pandoc
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends wget
+
+          wget https://github.com/jgm/pandoc/releases -O /tmp/pandocVersions.html
+          urlPart=`grep "\.deb" /tmp/pandocVersions.html | head -n 1 | cut -d'/' -f2-7 | cut -d'"' -f1`
+          wget "https://github.com/$urlPart" -O /tmp/pandoc.deb
+          sudo dpkg -i /tmp/pandoc.deb
+          rm /tmp/pandocVersions.html
+          rm /tmp/pandoc.deb
+
+          # Convert README to .rst format
+          pandoc --from=gfm --output=README.rst --to=rst README.md
+
+          # Install twine
+          python -m pip install wheel twine
+
+          # Create packages to upload to PyPI
+          python setup.py sdist
+          python setup.py bdist_wheel
+
+          # Upload packages to PyPI
+          twine upload dist/*
+
+      # build Docker image and push to GitHub Container Registry
+      - name: Push Docker image
+        if: steps.determine-if-release-needed.outputs.release == '1'
+        run: |
+          docker login ${{ steps.get-docker-image-tag.outputs.dockerRegistry }} \
+            --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} \
+            --password ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+          docker push ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}:${{ steps.get-docker-image-tag.outputs.simulatorVersion }}
+
+          if [[ "${{ github.ref }}" =~ ^refs/tags/ ]] || [ "${{ github.event.inputs.simulatorVersionLatest }}" == "true" ]; then
+            docker push ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}:latest
+          fi
+
+      # Submit to BioSimulators registry
+      - name: Submit to BioSimulators registry
+        if: steps.determine-if-release-needed.outputs.release == '1'
+        run: |
+          REVISION=$(git rev-parse HEAD)
           curl \
             -X POST \
-            -u ${{ github.actor }}:${{ github.token }} \
+            -u ${{ secrets.GH_ISSUE_USERNAME }}:${{ secrets.GH_ISSUE_TOKEN }} \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/biosimulators/Biosimulators/issues \
-            -d '{"labels": ["Submit simulator"], "title": "Submit ${IMAGE_ID} ${IMAGE_VERSION}", "body": "---\nname: ${IMAGE_ID}\nversion: ${IMAGE_VERSION}\nspecificationsUrl: https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ github.repository }}/${{ github.ref }}/biosimulators.json\nvalidateImage: true\n\n---"}'
+            -d "{\"labels\": [\"Submit simulator\"], \"title\": \"Submit ${{ steps.get-docker-image-tag.outputs.simulatorName }} ${{ steps.get-docker-image-tag.outputs.simulatorVersion }}\", \"body\": \"---\nid: ${{ steps.get-docker-image-tag.outputs.simulatorId }}\nversion: ${{ steps.get-docker-image-tag.outputs.simulatorVersion }}\nspecificationsUrl: https://raw.githubusercontent.com/${{ github.repository }}/${REVISION}/biosimulators.json\nvalidateImage: true\n\n---\"}"

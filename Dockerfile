@@ -1,10 +1,13 @@
 # Base OS
 FROM python:3.7.9-slim-buster
 
+ARG VERSION="0.0.1"
+ARG SIMULATOR_VERSION="0.11.11"
+
 # metadata
 LABEL \
     org.opencontainers.image.title="AMICI" \
-    org.opencontainers.image.version="0.11.8" \
+    org.opencontainers.image.version="${SIMULATOR_VERSION}" \
     org.opencontainers.image.description="Interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)." \
     org.opencontainers.image.url="https://github.com/AMICI-dev/AMICI" \
     org.opencontainers.image.documentation="https://amici.readthedocs.io/" \
@@ -14,9 +17,9 @@ LABEL \
     org.opencontainers.image.licenses="BSD-3-Clause" \
     \
     base_image="python:3.7.9-slim-buster" \
-    version="0.0.1" \
+    version="${VERSION}" \
     software="AMICI" \
-    software.version="0.11.8" \
+    software.version="${SIMULATOR_VERSION}" \
     about.summary="Interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations)." \
     about.home="https://github.com/AMICI-dev/AMICI" \
     about.documentation="https://amici.readthedocs.io/" \
@@ -45,6 +48,7 @@ RUN apt-get update -y \
         g++ \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+RUN pip install amici==${SIMULATOR_VERSION}
 
 # Entrypoint
 ENTRYPOINT ["amici"]

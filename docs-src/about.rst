@@ -3,7 +3,7 @@ About BioSimulators-AMICI
 
 License
 -------
-This package is released under the `MIT License <https://github.com/biosimulators/BioSimulators_AMICI/blob/dev/LICENSE>`_. AMICI is released under the `3-Clause BSD License <https://github.com/AMICI-dev/AMICI/blob/master/LICENSE.md>`_.
+This package is released under the `MIT License <https://github.com/biosimulators/Biosimulators_AMICI/blob/dev/LICENSE>`_. AMICI is released under the `3-Clause BSD License <https://github.com/AMICI-dev/AMICI/blob/master/LICENSE.md>`_.
 
 Development team
 ----------------
