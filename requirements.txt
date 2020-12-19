@@ -1,4 +1,4 @@
 amici
-biosimulators_utils >= 0.1.10
+biosimulators_utils >= 0.1.11
 numpy
 sympy >= 1.7
