@@ -147,9 +147,11 @@ jobs:
       - name: Build Docker image
         run: |
           REVISION=$(git rev-parse HEAD)
+          CREATED=$(date --rfc-3339=seconds | sed 's/ /T/')
           docker build \
             --label org.opencontainers.image.source=https://github.com/${{ github.repository }} \
             --label org.opencontainers.image.revision=${REVISION} \
+            --label org.opencontainers.image.created=${CREATED} \
             --build-arg VERSION=${{ steps.get-version-number.outputs.version }} \
             --build-arg SIMULATOR_VERSION=${{ steps.get-docker-image-tag.outputs.simulatorVersion }} \
             --tag ${{ steps.get-docker-image-tag.outputs.dockerImageBaseUrl }}:${{ steps.get-docker-image-tag.outputs.simulatorVersion }} \
