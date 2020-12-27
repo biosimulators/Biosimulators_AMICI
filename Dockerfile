@@ -39,10 +39,11 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy code for command-line interface into image and install it
-COPY . /root/Biosimulators_amici
-RUN pip install /root/Biosimulators_amici \
-    && rm -rf /root/Biosimulators_amici
+COPY . /root/Biosimulators_AMICI
+RUN pip install /root/Biosimulators_AMICI \
+    && rm -rf /root/Biosimulators_AMICI
 RUN pip install amici==${SIMULATOR_VERSION}
+ENV MPLBACKEND=PDF
 
 # Entrypoint
 ENTRYPOINT ["amici"]
