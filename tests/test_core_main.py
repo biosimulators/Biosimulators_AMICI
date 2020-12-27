@@ -304,17 +304,17 @@ class CliTestCase(unittest.TestCase):
         return doc
 
     def _assert_combine_archive_outputs(self, doc, out_dir):
-        self.assertEqual(set(os.listdir(out_dir)), set(['reports.h5', 'reports.zip', 'sim_1.sedml']))
+        self.assertEqual(set(['reports.h5', 'reports.zip', 'sim_1.sedml']).difference(set(os.listdir(out_dir))), set())
 
         # check HDF report
         report = ReportReader().run(out_dir, 'sim_1.sedml/report_1', format=report_data_model.ReportFormat.h5)
 
-        self.assertEqual(sorted(report.index), sorted([d.id for d in doc.outputs[0].data_sets]))
+        self.assertEqual(sorted(report.index), sorted([d.label for d in doc.outputs[0].data_sets]))
 
         sim = doc.tasks[0].simulation
         self.assertEqual(report.shape, (len(doc.outputs[0].data_sets), sim.number_of_points + 1))
         numpy.testing.assert_almost_equal(
-            report.loc['data_set_time', :].to_numpy(),
+            report.loc['Time', :].to_numpy(),
             numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1),
         )
 
@@ -323,12 +323,12 @@ class CliTestCase(unittest.TestCase):
         # check CSV report
         report = ReportReader().run(out_dir, 'sim_1.sedml/report_1', format=report_data_model.ReportFormat.csv)
 
-        self.assertEqual(sorted(report.index), sorted([d.id for d in doc.outputs[0].data_sets]))
+        self.assertEqual(sorted(report.index), sorted([d.label for d in doc.outputs[0].data_sets]))
 
         sim = doc.tasks[0].simulation
         self.assertEqual(report.shape, (len(doc.outputs[0].data_sets), sim.number_of_points + 1))
         numpy.testing.assert_almost_equal(
-            report.loc['data_set_time', :].to_numpy(),
+            report.loc['Time', :].to_numpy(),
             numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1),
         )
 
