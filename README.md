@@ -24,7 +24,7 @@ A simple web application and web service for using AMICI to execute COMBINE/OMEX
 
 ### Install Python package
 ```
-pip install git+https://github.com/biosimulators/Biosimulators_AMICI
+pip install biosimulators-amici
 ```
 
 ### Install Docker image
