@@ -14,7 +14,7 @@
                 <div class="bibo:authorList">Edelstein SJ, Schaad O, Henry E, Bertrand D, Changeux JP.</div>
                 <div class="bibo:Journal">Biol. Cybern. 1996 Nov; 75(5):361-79</div>
                 <p>Abstract:</p>
-                <div class="bibo:abstract">        <p>Nicotinic acetylcholine receptors are transmembrane oligomeric proteins that mediate interconversions between open and closed channel states under the control of neurotransmitters. Fast in vitro chemical kinetics and in vivo electrophysiological recordings are consistent with the following multi-step scheme. Upon binding of agonists, receptor molecules in the closed but activatable resting state (the Basal state, B) undergo rapid transitions to states of higher affinities with either open channels (the Active state, A) or closed channels (the initial Inactivatable and fully Desensitized states, I and D). In order to represent the functional properties of such receptors, we have developed a kinetic model that links conformational interconversion rates to agonist binding and extends the general principles of the Monod-Wyman-Changeux model of allosteric transitions. The crucial assumption is that the linkage is controlled by the position of the interconversion transition states on a hypothetical linear reaction coordinate. Application of the model to the peripheral nicotine acetylcholine receptor (nAChR) accounts for the main properties of ligand-gating, including single-channel events, and several new relationships are predicted. Kinetic simulations reveal errors inherent in using the dose-response analysis, but justify its application under defined conditions. The model predicts that (in order to overcome the intrinsic stability of the B state and to produce the appropriate cooperativity) channel activation is driven by an A state with a Kd in the 50 nM range, hence some 140-fold stronger than the apparent affinity of the open state deduced previously. According to the model, recovery from the desensitized states may occur via rapid transit through the A state with minimal channel opening, thus without necessarily undergoing a distinct recovery pathway, as assumed in the standard 'cycle' model. Transitions to the desensitized states by low concentration 'pre-pulses' are predicted to occur without significant 
+                <div class="bibo:abstract">        <p>Nicotinic acetylcholine receptors are transmembrane oligomeric proteins that mediate interconversions between open and closed channel states under the control of neurotransmitters. Fast in vitro chemical kinetics and in vivo electrophysiological recordings are consistent with the following multi-step scheme. Upon binding of agonists, receptor molecules in the closed but activatable resting state (the Basal state, B) undergo rapid transitions to states of higher affinities with either open channels (the Active state, A) or closed channels (the initial Inactivatable and fully Desensitized states, I and D). In order to represent the functional properties of such receptors, we have developed a kinetic model that links conformational interconversion rates to agonist binding and extends the general principles of the Monod-Wyman-Changeux model of allosteric transitions. The crucial assumption is that the linkage is controlled by the position of the interconversion transition states on a hypothetical linear reaction coordinate. Application of the model to the peripheral nicotine acetylcholine receptor (nAChR) accounts for the main properties of ligand-gating, including single-channel events, and several new relationships are predicted. Kinetic simulations reveal errors inherent in using the dose-response analysis, but justify its application under defined conditions. The model predicts that (in order to overcome the intrinsic stability of the B state and to produce the appropriate cooperativity) channel activation is driven by an A state with a Kd in the 50 nM range, hence some 140-fold stronger than the apparent affinity of the open state deduced previously. According to the model, recovery from the desensitized states may occur via rapid transit through the A state with minimal channel opening, thus without necessarily undergoing a distinct recovery pathway, as assumed in the standard 'cycle' model. Transitions to the desensitized states by low concentration 'pre-pulses' are predicted to occur without significant
 channel opening, but equilibrium values of IC50 can be obtained only with long pre-pulse times. Predictions are also made concerning allosteric effectors and their possible role in coincidence detection. In terms of future developments, the analysis presented here provides a physical basis for constructing more biologically realistic models of synaptic modulation that may be applied to artificial neural networks.</p>
                     </div>
                 </div>
@@ -28,7 +28,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             for more information.        </p>
                 </div>
             </body>
-      
+
     </notes>
     <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -106,7 +106,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>biliganded basal state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -127,7 +127,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monoliganded intermediate</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -148,7 +148,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monoliganded active state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -169,7 +169,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>unkiganded active state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -189,7 +189,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monoliganded basal state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -210,7 +210,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>unliganded basal state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -231,7 +231,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>biliganded desensitised state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -251,7 +251,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>fully desensitised state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -272,7 +272,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>biliganded intermediate</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -293,7 +293,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monoliganded desensitised state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -314,7 +314,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>unliganted intermediate</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -335,7 +335,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>biliganted active state</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -356,7 +356,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>ligand</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -415,7 +415,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>first ligand on basal</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -441,9 +441,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_0 * B * L - kr_0 * BL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -470,7 +470,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>second ligand on basal</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -496,9 +496,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_1 * BL * L - kr_1 * BLL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -525,7 +525,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>opening of biliganded</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -550,9 +550,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_2 * BLL - kr_2 * ALL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -578,7 +578,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>first ligand on active</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -604,9 +604,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_3 * A * L - kr_3 * AL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -633,7 +633,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>second ligand on active</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -659,9 +659,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_4 * AL * L - kr_4 * ALL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -688,7 +688,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>opening of unliganded</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -713,9 +713,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_5 * B - kr_5 * A</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -741,7 +741,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>opening of monoliganded</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -766,9 +766,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_6 * BL - kr_6 * AL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -794,7 +794,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>first ligand on intermediate</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -820,9 +820,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_7 * I * L - kr_7 * IL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -849,7 +849,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>second ligand on intermediate</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -875,9 +875,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_8 * IL * L - kr_8 * ILL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -904,7 +904,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>unlig act &lt;=> unlig interm</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -929,9 +929,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_9 * A - kr_9 * I</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -957,7 +957,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monolig act &lt;=> monolig interm</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -982,9 +982,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_10 * AL - kr_10 * IL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1010,7 +1010,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>bilig act &lt;=> bilig interm</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -1035,9 +1035,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_11 * ALL - kr_11 * ILL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1063,7 +1063,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>first ligand on desensitised</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -1089,9 +1089,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_12 * D * L - kr_12 * DL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1118,7 +1118,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>second ligand on desensitised</p>
                     </body>
-          
+
         </notes>
         <annotation>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
@@ -1144,9 +1144,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_13 * DL * L - kr_13 * DLL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1173,7 +1173,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>unlig interm &lt;=> unlig desen</p>
                     </body>
-          
+
         </notes>
         <listOfReactants>
           <speciesReference metaid="_349351" species="I"/>
@@ -1186,9 +1186,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_14 * I - kr_14 * D</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1214,7 +1214,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>monolig interm &lt;=> monolig desen</p>
                     </body>
-          
+
         </notes>
         <listOfReactants>
           <speciesReference metaid="_349387" species="IL"/>
@@ -1227,9 +1227,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_15 * IL - kr_15 * DL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>
@@ -1255,7 +1255,7 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
           <body xmlns="http://www.w3.org/1999/xhtml">
                 <p>bilig interm &lt;=> bilig desen</p>
                     </body>
-          
+
         </notes>
         <listOfReactants>
           <speciesReference metaid="_349423" species="ILL"/>
@@ -1268,9 +1268,9 @@ channel opening, but equilibrium values of IC50 can be obtained only with long p
             <body xmlns="http://www.w3.org/1999/xhtml">
                     <p>kf_16 * ILL - kr_16 * DLL</p>
                         </body>
-            
+
           </notes>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> comp1 </ci>

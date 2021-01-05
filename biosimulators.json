@@ -314,8 +314,8 @@
   "interfaceTypes": ["library", "command-line application", "BioSimulators Docker image"],
   "supportedOperatingSystemTypes": ["platform-independent"],
   "supportedProgrammingLanguages": [
-    {"namespace": "Linguist", "id": "Python"}, 
-    {"namespace": "Linguist", "id": "C++"}, 
+    {"namespace": "Linguist", "id": "Python"},
+    {"namespace": "Linguist", "id": "C++"},
     {"namespace": "Linguist", "id": "MATLAB"}
   ],
   "funding": [],
