@@ -16,22 +16,22 @@ KISAO_ALGORITHMS_MAP = {
 
 KISAO_PARAMETERS_MAP = {
     'KISAO_0000209': {
-        'name': 'setRelativeTolerance',
+        'name': 'RelativeTolerance',
         'type': ValueType.float,
         'default': 1e-8,
     },
     'KISAO_0000211': {
-        'name': 'setAbsoluteTolerance',
+        'name': 'AbsoluteTolerance',
         'type': ValueType.float,
         'default': 1e-16,
     },
     'KISAO_0000415': {
-        'name': 'setMaxSteps',
+        'name': 'MaxSteps',
         'type': ValueType.integer,
         'default': 10000,
     },
     'KISAO_0000543': {
-        'name': 'setStabilityLimitFlag',
+        'name': 'StabilityLimitFlag',
         'type': ValueType.boolean,
         'default': True,
     },

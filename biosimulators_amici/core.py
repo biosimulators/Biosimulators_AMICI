@@ -8,6 +8,7 @@
 
 from .data_model import KISAO_ALGORITHMS_MAP, KISAO_PARAMETERS_MAP
 from biosimulators_utils.combine.exec import exec_sedml_docs_in_archive
+from biosimulators_utils.log.data_model import CombineArchiveLog, TaskLog  # noqa: F401
 from biosimulators_utils.plot.data_model import PlotFormat  # noqa: F401
 from biosimulators_utils.report.data_model import ReportFormat, DataGeneratorVariableResults  # noqa: F401
 from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTimeCourseSimulation,  # noqa: F401
@@ -55,33 +56,42 @@ def exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
         plot_formats (:obj:`list` of :obj:`PlotFormat`, optional): report format (e.g., pdf)
         bundle_outputs (:obj:`bool`, optional): if :obj:`True`, bundle outputs into archives for reports and plots
         keep_individual_outputs (:obj:`bool`, optional): if :obj:`True`, keep individual output files
+
+    Returns:
+        :obj:`CombineArchiveLog`: log
     """
     sed_doc_executer = functools.partial(exec_sed_doc, exec_sed_task)
-    exec_sedml_docs_in_archive(sed_doc_executer, archive_filename, out_dir,
-                               apply_xml_model_changes=True,
-                               report_formats=report_formats,
-                               plot_formats=plot_formats,
-                               bundle_outputs=bundle_outputs,
-                               keep_individual_outputs=keep_individual_outputs)
+    return exec_sedml_docs_in_archive(sed_doc_executer, archive_filename, out_dir,
+                                      apply_xml_model_changes=True,
+                                      report_formats=report_formats,
+                                      plot_formats=plot_formats,
+                                      bundle_outputs=bundle_outputs,
+                                      keep_individual_outputs=keep_individual_outputs)
 
 
-def exec_sed_task(task, variables):
+def exec_sed_task(task, variables, log=None):
     ''' Execute a task and save its results
 
     Args:
        task (:obj:`Task`): task
        variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+       log (:obj:`TaskLog`, optional): log for the task
 
     Returns:
-        :obj:`DataGeneratorVariableResults`: results of variables
+        :obj:`tuple`:
+
+            :obj:`DataGeneratorVariableResults`: results of variables
+            :obj:`TaskLog`: log
     '''
+    log = log or TaskLog()
+
     target_x_paths_ids = validate_sed_task(task, variables)
 
     # Read the model for the task
     model, sbml_model, model_name, model_dir = import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
 
     # Configure task
-    solver = config_task(task, model)
+    solver, solver_arguments = config_task(task, model)
 
     # Run simulation using default model parameters and solver options
     results = exec_task(model, solver)
@@ -94,8 +104,17 @@ def exec_sed_task(task, variables):
     # cleanup module and temporary directory
     cleanup_model(model_name, model_dir)
 
-    # return results
-    return variable_results
+    # log action
+    log.algorithm = task.simulation.algorithm.kisao_id
+    arguments = solver_arguments
+    arguments['solver'] = amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__
+    log.simulator_details = {
+        'method': amici.runAmiciSimulation.__module__ + '.' + amici.runAmiciSimulation.__name__,
+        'arguments': arguments,
+    }
+
+    # return results and log
+    return variable_results, log
 
 
 def validate_sed_task(task, variables):
@@ -173,7 +192,10 @@ def config_task(task, model):
         model (:obj:`amici.amici.ModelPtr`): AMICI model
 
     Returns:
-        :obj:`amici.amici.SolverPtr`: solver
+        :obj:`tuple`:
+
+            * :obj:`amici.amici.SolverPtr`: solver
+            * :obj:`dict`: dictionary of arguments for the solver
 
     Raises:
         :obj:`NotImplementedError`: the task involves and unsupported algorithm or parameter
@@ -192,6 +214,7 @@ def config_task(task, model):
             "Algorithm with KiSAO id '{}' is not supported".format(sim.algorithm.kisao_id))
 
     solver = model.getSolver()
+    args = {}
 
     # Apply the algorithm parameter changes specified by `sim.algorithm_parameter_changes`
     for change in sim.algorithm.changes:
@@ -199,7 +222,7 @@ def config_task(task, model):
         if param_props is None:
             raise NotImplementedError(
                 "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id))
-        param_setter = getattr(solver, param_props['name'])
+        param_setter = getattr(solver, 'set' + param_props['name'])
 
         value = change.new_value
         if not validate_str_value(value, param_props['type']):
@@ -207,9 +230,10 @@ def config_task(task, model):
                 value, param_props['type'].name, change.kisao_id))
 
         param_setter(parse_value(value, param_props['type']))
+        args[param_props['name']] = value
 
     # return solver
-    return solver
+    return solver, args
 
 
 def exec_task(model, solver):
@@ -284,4 +308,5 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
             ),
         ]))
 
+    # return the result of each variable
     return variable_results

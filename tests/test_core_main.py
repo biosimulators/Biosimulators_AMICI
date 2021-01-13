@@ -9,6 +9,7 @@
 from biosimulators_amici import __main__
 from biosimulators_amici import core
 from biosimulators_utils.combine import data_model as combine_data_model
+from biosimulators_utils.combine.exceptions import CombineArchiveExecutionError
 from biosimulators_utils.combine.io import CombineArchiveWriter
 from biosimulators_utils.report import data_model as report_data_model
 from biosimulators_utils.report.io import ReportReader
@@ -68,7 +69,7 @@ class CliTestCase(unittest.TestCase):
             sedml_data_model.DataGeneratorVariable(id='IL', target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='IL']"),
         ]
 
-        variable_results = core.exec_sed_task(task, variables)
+        variable_results, _ = core.exec_sed_task(task, variables)
 
         self.assertTrue(sorted(variable_results.keys()), sorted([var.id for var in variables]))
         self.assertEqual(variable_results[variables[0].id].shape, (task.simulation.number_of_points + 1,))
@@ -132,7 +133,7 @@ class CliTestCase(unittest.TestCase):
             core.config_task(task, model)
 
         task.simulation.algorithm.changes[0].new_value = '2e-8'
-        solver = core.config_task(task, model)
+        solver, _ = core.config_task(task, model)
 
         # Run simulation using default model parameters and solver options
         results = core.exec_task(model, solver)

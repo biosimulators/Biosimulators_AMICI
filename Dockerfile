@@ -1,7 +1,7 @@
 # Base OS
 FROM python:3.7.9-slim-buster
 
-ARG VERSION="0.1.3"
+ARG VERSION="0.1.4"
 ARG SIMULATOR_VERSION="0.11.11"
 
 # metadata
@@ -43,7 +43,8 @@ COPY . /root/Biosimulators_AMICI
 RUN pip install /root/Biosimulators_AMICI \
     && rm -rf /root/Biosimulators_AMICI
 RUN pip install amici==${SIMULATOR_VERSION}
-ENV MPLBACKEND=PDF
+ENV VERBOSE=0 \
+    MPLBACKEND=PDF
 
 # Entrypoint
 ENTRYPOINT ["amici"]
