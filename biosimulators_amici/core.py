@@ -10,9 +10,9 @@ from .data_model import KISAO_ALGORITHMS_MAP, KISAO_PARAMETERS_MAP
 from biosimulators_utils.combine.exec import exec_sedml_docs_in_archive
 from biosimulators_utils.log.data_model import CombineArchiveLog, TaskLog  # noqa: F401
 from biosimulators_utils.plot.data_model import PlotFormat  # noqa: F401
-from biosimulators_utils.report.data_model import ReportFormat, DataGeneratorVariableResults  # noqa: F401
+from biosimulators_utils.report.data_model import ReportFormat, VariableResults  # noqa: F401
 from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTimeCourseSimulation,  # noqa: F401
-                                                  DataGeneratorVariable, DataGeneratorVariableSymbol)
+                                                  Variable, Symbol)
 from biosimulators_utils.sedml import validation
 from biosimulators_utils.sedml.exec import exec_sed_doc
 from biosimulators_utils.utils.core import validate_str_value, parse_value
@@ -74,13 +74,13 @@ def exec_sed_task(task, variables, log=None):
 
     Args:
        task (:obj:`Task`): task
-       variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+       variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
        log (:obj:`TaskLog`, optional): log for the task
 
     Returns:
         :obj:`tuple`:
 
-            :obj:`DataGeneratorVariableResults`: results of variables
+            :obj:`VariableResults`: results of variables
             :obj:`TaskLog`: log
     '''
     log = log or TaskLog()
@@ -122,7 +122,7 @@ def validate_sed_task(task, variables):
 
     Args:
        task (:obj:`Task`): task
-       variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+       variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
 
     Returns:
         :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps each XPath to the
@@ -131,10 +131,11 @@ def validate_sed_task(task, variables):
     validation.validate_task(task)
     validation.validate_model_language(task.model.language, ModelLanguage.SBML)
     validation.validate_model_change_types(task.model.changes, ())
+    validation.validate_model_changes(task.model.changes)
     validation.validate_simulation_type(task.simulation, (UniformTimeCourseSimulation, ))
     validation.validate_uniform_time_course_simulation(task.simulation)
     validation.validate_data_generator_variables(variables)
-    return validation.validate_data_generator_variable_xpaths(variables, task.model.source, attr='id')
+    return validation.validate_variable_xpaths(variables, task.model.source, attr='id')
 
 
 def import_model_from_sbml(filename, variables):
@@ -255,13 +256,13 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
     Args:
         model (:obj:`amici.amici.ModelPtr`): AMICI model
         sbml_model (:obj:`libsbml.Model`): SBML model
-        variables (:obj:`list` of :obj:`DataGeneratorVariable`): variables that should be recorded
+        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
         target_x_paths_ids (:obj:`dict` of :obj:`str` to :obj:`str`): dictionary that maps each XPath to the
             value of the attribute of the object in the XML file that matches the XPath
         results (:obj:`amici.numpy.ReturnDataView`): simulation results
 
     Returns:
-        :obj:`DataGeneratorVariableResults`: results of variables
+        :obj:`VariableResults`: results of variables
 
     Raises:
         :obj:`NotImplementedError`: if a symbol could not be recorded
@@ -269,12 +270,12 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
     """
     var_id_to_state_index = {id: index for index, id in enumerate(model.getStateIds())}
 
-    variable_results = DataGeneratorVariableResults()
+    variable_results = VariableResults()
     unpredicted_symbols = []
     unpredicted_targets = []
     for variable in variables:
         if variable.symbol:
-            if variable.symbol == DataGeneratorVariableSymbol.time:
+            if variable.symbol == Symbol.time:
                 variable_results[variable.id] = results['ts']
             else:
                 unpredicted_symbols.append(variable.symbol)
@@ -292,7 +293,7 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
             "The following variable symbols are not supported:\n  - {}\n\n".format(
                 '\n  - '.join(sorted(unpredicted_symbols)),
             ),
-            "Symbols must be one of the following:\n  - {}".format(DataGeneratorVariableSymbol.time),
+            "Symbols must be one of the following:\n  - {}".format(Symbol.time),
         ]))
 
     if unpredicted_targets:
