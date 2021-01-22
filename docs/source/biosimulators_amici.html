@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>biosimulators_amici package &#8212; BioSimulators-AMICI 0.1.4 documentation</title>
+    <title>biosimulators_amici package &#8212; BioSimulators-AMICI 0.1.5 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -180,12 +180,12 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>task</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code>) – task</p></li>
-<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Variable</span></code>) – variables that should be recorded</p></li>
 <li><p><strong>log</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskLog</span></code>, optional) – log for the task</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariableResults</span></code>: results of variables
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariableResults</span></code>: results of variables
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">TaskLog</span></code>: log</p>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -254,7 +254,7 @@ with reports at keys <code class="docutils literal notranslate"><span class="pre
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.amici.ModelPtr</span></code>) – AMICI model</p></li>
 <li><p><strong>sbml_model</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">libsbml.Model</span></code>) – SBML model</p></li>
-<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Variable</span></code>) – variables that should be recorded</p></li>
 <li><p><strong>target_x_paths_ids</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code> to <code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code>) – dictionary that maps each XPath to the
 value of the attribute of the object in the XML file that matches the XPath</p></li>
 <li><p><strong>results</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">amici.numpy.ReturnDataView</span></code>) – simulation results</p></li>
@@ -264,7 +264,7 @@ value of the attribute of the object in the XML file that matches the XPath</p><
 <dd class="field-even"><p>results of variables</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariableResults</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariableResults</span></code></p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
@@ -309,7 +309,7 @@ value of the attribute of the object in the XML file that matches the XPath</p><
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>task</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Task</span></code>) – task</p></li>
-<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">DataGeneratorVariable</span></code>) – variables that should be recorded</p></li>
+<li><p><strong>variables</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Variable</span></code>) – variables that should be recorded</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
