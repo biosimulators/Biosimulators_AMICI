@@ -368,7 +368,8 @@ class CliTestCase(unittest.TestCase):
 
     def _get_combine_archive_exec_env(self):
         return {
-            'REPORT_FORMATS': 'h5,csv'
+            'REPORT_FORMATS': 'h5,csv',
+            'KEEP_INDIVIDUAL_OUTPUTS': '1',
         }
 
     def test_exec_sedml_docs_in_combine_archive_with_docker_image(self):
