@@ -1,83 +1,94 @@
 {
   "id": "amici",
   "name": "AMICI",
-  "version": "0.11.14",
+  "version": "v0.11.16",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
-  "urls": [{"type": "Home page", "url": "https://github.com/AMICI-dev/amici"}],
+  "urls": [
+    {
+      "type": "Home page",
+      "url": "https://github.com/AMICI-dev/amici"
+    }
+  ],
   "image": {
-    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.14",
+    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:v0.11.16",
     "format": {
       "namespace": "EDAM",
-      "id": "format_3973", "version": null, "supportedFeatures": []
+      "id": "format_3973",
+      "version": null,
+      "supportedFeatures": []
     },
     "operatingSystemType": "Linux"
   },
-  "authors": [{
+  "authors": [
+    {
       "firstName": "Fabian",
       "middleName": null,
       "lastName": "Froehlich",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Jan",
       "middleName": null,
       "lastName": "Hasenauer",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Daniel",
       "middleName": null,
       "lastName": "Weindl",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Paul",
       "middleName": null,
       "lastName": "Stapor",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Fabian",
       "middleName": "J.",
       "lastName": "Theis",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Barbara",
       "middleName": null,
       "lastName": "Kaltenbacher",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Joachim",
       "middleName": "O.",
       "lastName": "Rädler",
-            "identifiers": []
+      "identifiers": []
     },
     {
       "firstName": "Yannik",
       "middleName": null,
       "lastName": "Schälte",
-            "identifiers": []
+      "identifiers": []
     }
   ],
   "references": {
-    "identifiers": [{
-      "namespace": "pypi",
-      "id": "amici",
-      "url": "https://pypi.org/project/amici/"
-    },
-    {
-      "namespace": "pypi",
-      "id": "biosimulators-amici",
-      "url": "https://pypi.org/project/biosimulators-amici/"
-    },
-    {
-      "namespace": "biotools",
-      "id": "AMICI",
-      "url": "https://bio.tools/AMICI"
-    }],
-    "citations": [{
+    "identifiers": [
+      {
+        "namespace": "pypi",
+        "id": "amici",
+        "url": "https://pypi.org/project/amici/"
+      },
+      {
+        "namespace": "pypi",
+        "id": "biosimulators-amici",
+        "url": "https://pypi.org/project/biosimulators-amici/"
+      },
+      {
+        "namespace": "biotools",
+        "id": "AMICI",
+        "url": "https://bio.tools/AMICI"
+      }
+    ],
+    "citations": [
+      {
         "title": "Scalable parameter estimation for genome-scale biochemical reaction networks",
         "authors": "Fabian Fröhlich, Barbara Kaltenbacher, Fabian J. Theis & Jan Hasenauer",
         "journal": "PLOS Computational Biology",
@@ -85,11 +96,13 @@
         "issue": 1,
         "pages": "e1005331",
         "year": 2017,
-        "identifiers": [{
-          "namespace": "doi",
-          "id": "10.1371/journal.pcbi.1005331",
-          "url": "https://doi.org/10.1371/journal.pcbi.1005331"
-        }]
+        "identifiers": [
+          {
+            "namespace": "doi",
+            "id": "10.1371/journal.pcbi.1005331",
+            "url": "https://doi.org/10.1371/journal.pcbi.1005331"
+          }
+        ]
       },
       {
         "title": "Parameter estimation for dynamical systems with discrete events and logical operations",
@@ -99,11 +112,13 @@
         "issue": 7,
         "pages": "1049-1056",
         "year": 2017,
-        "identifiers": [{
-          "namespace": "doi",
-          "id": "10.1093/bioinformatics/btw764",
-          "url": "https://doi.org/10.1093/bioinformatics/btw764"
-        }]
+        "identifiers": [
+          {
+            "namespace": "doi",
+            "id": "10.1093/bioinformatics/btw764",
+            "url": "https://doi.org/10.1093/bioinformatics/btw764"
+          }
+        ]
       }
     ]
   },
@@ -111,43 +126,63 @@
     "namespace": "SPDX",
     "id": "BSD-3-Clause"
   },
-  "algorithms": [{
+  "algorithms": [
+    {
       "id": "CVODES",
       "name": "CVODES is a solver for stiff and nonstiff ODE systems (initial value problem) given in explicit form y’ = f(t,y,p) with sensitivity analysis capabilities (both forward and adjoint modes).",
       "kisaoId": {
         "namespace": "KISAO",
         "id": "KISAO_0000496"
       },
-      "modelingFrameworks": [{
-        "namespace": "SBO",
-        "id": "SBO_0000293"
-      }],
-      "modelFormats": [{
-        "namespace": "EDAM",
-        "id": "format_2585", "version": null, "supportedFeatures": []
-      }],
-      "simulationFormats": [{
-        "namespace": "EDAM",
-        "id": "format_3685", "version": "L1V3", "supportedFeatures": []
-      }],
-      "archiveFormats": [{
-        "namespace": "EDAM",
-        "id": "format_3686", "version": null, "supportedFeatures": []
-      }],
-      "citations": [{
-        "title": "CVODES: the sensitivity-enabled ODE solver in SUNDIALS",
-        "authors": "Radu Serban & Alan C. Hindmarsh",
-        "journal": "ASME 2005 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference",
-        "volume": 47438,
-        "pages": "257-269",
-        "year": 2005,
-        "identifiers": [{
-          "namespace": "doi",
-          "id": "10.1115/DETC2005-85597",
-          "url": "https://doi.org/10.1115/DETC2005-85597"
-        }]
-      }],
-      "parameters": [{
+      "modelingFrameworks": [
+        {
+          "namespace": "SBO",
+          "id": "SBO_0000293"
+        }
+      ],
+      "modelFormats": [
+        {
+          "namespace": "EDAM",
+          "id": "format_2585",
+          "version": null,
+          "supportedFeatures": []
+        }
+      ],
+      "simulationFormats": [
+        {
+          "namespace": "EDAM",
+          "id": "format_3685",
+          "version": "L1V3",
+          "supportedFeatures": []
+        }
+      ],
+      "archiveFormats": [
+        {
+          "namespace": "EDAM",
+          "id": "format_3686",
+          "version": null,
+          "supportedFeatures": []
+        }
+      ],
+      "citations": [
+        {
+          "title": "CVODES: the sensitivity-enabled ODE solver in SUNDIALS",
+          "authors": "Radu Serban & Alan C. Hindmarsh",
+          "journal": "ASME 2005 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference",
+          "volume": 47438,
+          "pages": "257-269",
+          "year": 2005,
+          "identifiers": [
+            {
+              "namespace": "doi",
+              "id": "10.1115/DETC2005-85597",
+              "url": "https://doi.org/10.1115/DETC2005-85597"
+            }
+          ]
+        }
+      ],
+      "parameters": [
+        {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000209"
@@ -157,7 +192,11 @@
           "type": "float",
           "value": "1e-8",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+          "availableSoftwareInterfaceTypes": [
+            "library",
+            "command-line application",
+            "BioSimulators Docker image"
+          ]
         },
         {
           "kisaoId": {
@@ -169,7 +208,11 @@
           "type": "float",
           "value": "1e-16",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+          "availableSoftwareInterfaceTypes": [
+            "library",
+            "command-line application",
+            "BioSimulators Docker image"
+          ]
         },
         {
           "kisaoId": {
@@ -181,7 +224,11 @@
           "type": "integer",
           "value": "10000",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+          "availableSoftwareInterfaceTypes": [
+            "library",
+            "command-line application",
+            "BioSimulators Docker image"
+          ]
         },
         {
           "kisaoId": {
@@ -193,13 +240,19 @@
           "type": "boolean",
           "value": "true",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"]
+          "availableSoftwareInterfaceTypes": [
+            "library",
+            "command-line application",
+            "BioSimulators Docker image"
+          ]
         }
       ],
-      "dependentDimensions": [{
-        "namespace": "SIO",
-        "id": "SIO_000418"
-      }],
+      "dependentDimensions": [
+        {
+          "namespace": "SIO",
+          "id": "SIO_000418"
+        }
+      ],
       "dependentVariableTargetPatterns": [
         {
           "variables": "species concentrations",
@@ -210,14 +263,20 @@
           "targetPattern": "/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter/@value"
         }
       ],
-      "availableSoftwareInterfaceTypes": ["library", "command-line application", "BioSimulators Docker image"],
-      "dependencies": [{
-        "name": "SUNDIALS",
-        "version": null,
-        "required": true,
-        "freeNonCommercialLicense": true,
-        "url": "https://computing.llnl.gov/projects/sundials"
-      }]
+      "availableSoftwareInterfaceTypes": [
+        "library",
+        "command-line application",
+        "BioSimulators Docker image"
+      ],
+      "dependencies": [
+        {
+          "name": "SUNDIALS",
+          "version": null,
+          "required": true,
+          "freeNonCommercialLicense": true,
+          "url": "https://computing.llnl.gov/projects/sundials"
+        }
+      ]
     },
     {
       "id": "IDAS",
@@ -226,28 +285,35 @@
         "namespace": "KISAO",
         "id": "KISAO_0000283"
       },
-      "modelingFrameworks": [{
-        "namespace": "SBO",
-        "id": "SBO_0000293"
-      }],
+      "modelingFrameworks": [
+        {
+          "namespace": "SBO",
+          "id": "SBO_0000293"
+        }
+      ],
       "modelFormats": [],
       "simulationFormats": [],
       "archiveFormats": [],
-      "citations": [{
-        "title": "SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers",
-        "authors": "Alan C. Hindmarsh, Peter N. Brown, Keith E. Grant, Steven L. Lee, Radu Serban, Dan E. Shumaker & Carol S. Woodward",
-        "journal": "ACM Transactions on Mathematical Software",
-        "volume": 31,
-        "issue": 3,
-        "pages": "363-396",
-        "year": 2005,
-        "identifiers": [{
-          "namespace": "doi",
-          "id": "10.1145/1089014.1089020",
-          "url": "https://doi.org/10.1145/1089014.1089020"
-        }]
-      }],
-      "parameters": [{
+      "citations": [
+        {
+          "title": "SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers",
+          "authors": "Alan C. Hindmarsh, Peter N. Brown, Keith E. Grant, Steven L. Lee, Radu Serban, Dan E. Shumaker & Carol S. Woodward",
+          "journal": "ACM Transactions on Mathematical Software",
+          "volume": 31,
+          "issue": 3,
+          "pages": "363-396",
+          "year": 2005,
+          "identifiers": [
+            {
+              "namespace": "doi",
+              "id": "10.1145/1089014.1089020",
+              "url": "https://doi.org/10.1145/1089014.1089020"
+            }
+          ]
+        }
+      ],
+      "parameters": [
+        {
           "kisaoId": {
             "namespace": "KISAO",
             "id": "KISAO_0000209"
@@ -257,7 +323,9 @@
           "type": "float",
           "value": "1e-8",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library"]
+          "availableSoftwareInterfaceTypes": [
+            "library"
+          ]
         },
         {
           "kisaoId": {
@@ -269,7 +337,9 @@
           "type": "float",
           "value": "1e-16",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library"]
+          "availableSoftwareInterfaceTypes": [
+            "library"
+          ]
         },
         {
           "kisaoId": {
@@ -281,7 +351,9 @@
           "type": "integer",
           "value": "10000",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library"]
+          "availableSoftwareInterfaceTypes": [
+            "library"
+          ]
         },
         {
           "kisaoId": {
@@ -293,30 +365,53 @@
           "type": "boolean",
           "value": "true",
           "recommendedRange": null,
-                    "availableSoftwareInterfaceTypes": ["library"]
+          "availableSoftwareInterfaceTypes": [
+            "library"
+          ]
         }
       ],
-      "dependentDimensions": [{
-        "namespace": "SIO",
-        "id": "SIO_000418"
-      }],
+      "dependentDimensions": [
+        {
+          "namespace": "SIO",
+          "id": "SIO_000418"
+        }
+      ],
       "dependentVariableTargetPatterns": [],
-      "availableSoftwareInterfaceTypes": ["library"],
-      "dependencies": [{
-        "name": "SUNDIALS",
-        "version": null,
-        "required": true,
-        "freeNonCommercialLicense": true,
-        "url": "https://computing.llnl.gov/projects/sundials"
-      }]
+      "availableSoftwareInterfaceTypes": [
+        "library"
+      ],
+      "dependencies": [
+        {
+          "name": "SUNDIALS",
+          "version": null,
+          "required": true,
+          "freeNonCommercialLicense": true,
+          "url": "https://computing.llnl.gov/projects/sundials"
+        }
+      ]
     }
   ],
-  "interfaceTypes": ["library", "command-line application", "BioSimulators Docker image"],
-  "supportedOperatingSystemTypes": ["platform-independent"],
+  "interfaceTypes": [
+    "library",
+    "command-line application",
+    "BioSimulators Docker image"
+  ],
+  "supportedOperatingSystemTypes": [
+    "platform-independent"
+  ],
   "supportedProgrammingLanguages": [
-    {"namespace": "Linguist", "id": "Python"},
-    {"namespace": "Linguist", "id": "C++"},
-    {"namespace": "Linguist", "id": "MATLAB"}
+    {
+      "namespace": "Linguist",
+      "id": "Python"
+    },
+    {
+      "namespace": "Linguist",
+      "id": "C++"
+    },
+    {
+      "namespace": "Linguist",
+      "id": "MATLAB"
+    }
   ],
   "funding": [],
   "biosimulators": {
