@@ -15,7 +15,7 @@ from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTi
                                                   Variable, Symbol)
 from biosimulators_utils.sedml import validation
 from biosimulators_utils.sedml.exec import exec_sed_doc
-from biosimulators_utils.utils.core import validate_str_value, parse_value
+from biosimulators_utils.utils.core import validate_str_value, parse_value, raise_errors_warnings
 import amici
 import functools
 import importlib.util
@@ -128,13 +128,23 @@ def validate_sed_task(task, variables):
         :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps each XPath to the
             value of the attribute of the object in the XML file that matches the XPath
     """
-    validation.validate_task(task)
-    validation.validate_model_language(task.model.language, ModelLanguage.SBML)
-    validation.validate_model_change_types(task.model.changes, ())
-    validation.validate_model_changes(task.model.changes)
-    validation.validate_simulation_type(task.simulation, (UniformTimeCourseSimulation, ))
-    validation.validate_uniform_time_course_simulation(task.simulation)
-    validation.validate_data_generator_variables(variables)
+    model = task.model
+    sim = task.simulation
+
+    raise_errors_warnings(validation.validate_task(task),
+                          error_summary='Task `{}` is invalid.'.format(task.id))
+    raise_errors_warnings(validation.validate_model_language(task.model.language, ModelLanguage.SBML),
+                          error_summary='Language for model `{}` is not supported.'.format(model.id))
+    raise_errors_warnings(validation.validate_model_change_types(task.model.changes, ()),
+                          error_summary='Changes for model `{}` are not supported.'.format(model.id))
+    raise_errors_warnings(validation.validate_model_changes(task.model),
+                          error_summary='Changes for model `{}` are invalid.'.format(model.id))
+    raise_errors_warnings(validation.validate_simulation_type(task.simulation, (UniformTimeCourseSimulation, )),
+                          error_summary='{} `{}` is not supported.'.format(sim.__class__.__name__, sim.id))
+    raise_errors_warnings(validation.validate_simulation(task.simulation),
+                          error_summary='Simulation `{}` is invalid.'.format(sim.id))
+    raise_errors_warnings(validation.validate_data_generator_variables(variables),
+                          error_summary='Data generator variables for task `{}` are invalid.'.format(task.id))
     return validation.validate_variable_xpaths(variables, task.model.source, attr='id')
 
 
