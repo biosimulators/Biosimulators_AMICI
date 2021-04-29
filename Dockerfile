@@ -1,5 +1,5 @@
 # Base OS
-FROM python:3.7.9-slim-buster
+FROM python:3.9-slim-buster
 
 ARG VERSION="0.1.13"
 ARG SIMULATOR_VERSION="v0.11.16"
@@ -16,7 +16,7 @@ LABEL \
     org.opencontainers.image.vendor="BioSimulators Team" \
     org.opencontainers.image.licenses="BSD-3-Clause" \
     \
-    base_image="python:3.7.9-slim-buster" \
+    base_image="python:3.9-slim-buster" \
     version="${VERSION}" \
     software="AMICI" \
     software.version="${SIMULATOR_VERSION}" \

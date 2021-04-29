@@ -15,7 +15,9 @@ from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTi
                                                   Variable, Symbol)
 from biosimulators_utils.sedml import validation
 from biosimulators_utils.sedml.exec import exec_sed_doc
+from biosimulators_utils.simulator.utils import get_algorithm_substitution_policy
 from biosimulators_utils.utils.core import validate_str_value, parse_value, raise_errors_warnings
+from kisao.utils import get_preferred_substitute_algorithm_by_ids
 import amici
 import functools
 import importlib.util
@@ -91,7 +93,7 @@ def exec_sed_task(task, variables, log=None):
     model, sbml_model, model_name, model_dir = import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
 
     # Configure task
-    solver, solver_arguments = config_task(task, model)
+    solver, solver_kisao_id, solver_arguments = config_task(task, model)
 
     # Run simulation using default model parameters and solver options
     results = exec_task(model, solver)
@@ -105,7 +107,7 @@ def exec_sed_task(task, variables, log=None):
     cleanup_model(model_name, model_dir)
 
     # log action
-    log.algorithm = task.simulation.algorithm.kisao_id
+    log.algorithm = solver_kisao_id
     arguments = solver_arguments
     arguments['solver'] = amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__
     log.simulator_details = {
@@ -141,7 +143,7 @@ def validate_sed_task(task, variables):
                           error_summary='Changes for model `{}` are invalid.'.format(model.id))
     raise_errors_warnings(validation.validate_simulation_type(task.simulation, (UniformTimeCourseSimulation, )),
                           error_summary='{} `{}` is not supported.'.format(sim.__class__.__name__, sim.id))
-    raise_errors_warnings(validation.validate_simulation(task.simulation),
+    raise_errors_warnings(*validation.validate_simulation(task.simulation),
                           error_summary='Simulation `{}` is invalid.'.format(sim.id))
     raise_errors_warnings(*validation.validate_data_generator_variables(variables),
                           error_summary='Data generator variables for task `{}` are invalid.'.format(task.id))
@@ -206,6 +208,7 @@ def config_task(task, model):
         :obj:`tuple`:
 
             * :obj:`amici.amici.SolverPtr`: solver
+            * :obj:`str`: KiSAO id of the solver
             * :obj:`dict`: dictionary of arguments for the solver
 
     Raises:
@@ -219,32 +222,32 @@ def config_task(task, model):
     model.setTimepoints(numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1))
 
     # Load the algorithm specified by `sim.algorithm`
-    algorithm_name = KISAO_ALGORITHMS_MAP.get(sim.algorithm.kisao_id, None)
-    if algorithm_name is None:
-        raise NotImplementedError(
-            "Algorithm with KiSAO id '{}' is not supported".format(sim.algorithm.kisao_id))
+    exec_kisao_id = get_preferred_substitute_algorithm_by_ids(
+        sim.algorithm.kisao_id, KISAO_ALGORITHMS_MAP.keys(),
+        substitution_policy=get_algorithm_substitution_policy())
 
     solver = model.getSolver()
     args = {}
 
     # Apply the algorithm parameter changes specified by `sim.algorithm_parameter_changes`
-    for change in sim.algorithm.changes:
-        param_props = KISAO_PARAMETERS_MAP.get(change.kisao_id, None)
-        if param_props is None:
-            raise NotImplementedError(
-                "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id))
-        param_setter = getattr(solver, 'set' + param_props['name'])
+    if exec_kisao_id == sim.algorithm.kisao_id:
+        for change in sim.algorithm.changes:
+            param_props = KISAO_PARAMETERS_MAP.get(change.kisao_id, None)
+            if param_props is None:
+                raise NotImplementedError(
+                    "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id))
+            param_setter = getattr(solver, 'set' + param_props['name'])
 
-        value = change.new_value
-        if not validate_str_value(value, param_props['type']):
-            raise ValueError("'{}' is not a valid {} value for parameter {}".format(
-                value, param_props['type'].name, change.kisao_id))
+            value = change.new_value
+            if not validate_str_value(value, param_props['type']):
+                raise ValueError("'{}' is not a valid {} value for parameter {}".format(
+                    value, param_props['type'].name, change.kisao_id))
 
-        param_setter(parse_value(value, param_props['type']))
-        args[param_props['name']] = value
+            param_setter(parse_value(value, param_props['type']))
+            args[param_props['name']] = value
 
     # return solver
-    return solver, args
+    return solver, exec_kisao_id, args
 
 
 def exec_task(model, solver):

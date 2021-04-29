@@ -18,6 +18,7 @@ from biosimulators_utils.simulator.specs import gen_algorithms_from_specs
 from biosimulators_utils.sedml import data_model as sedml_data_model
 from biosimulators_utils.sedml.io import SedmlSimulationWriter
 from biosimulators_utils.sedml.utils import append_all_nested_children_to_doc
+from kisao.exceptions import AlgorithmCannotBeSubstitutedException
 from unittest import mock
 import datetime
 import dateutil.tz
@@ -151,8 +152,8 @@ class CliTestCase(unittest.TestCase):
         model, sbml_model, model_name, model_dir = core.import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
 
         # Configure task
-        task.simulation.algorithm.kisao_id = 'KISAO_0000001'
-        with self.assertRaisesRegex(NotImplementedError, 'is not supported'):
+        task.simulation.algorithm.kisao_id = 'KISAO_0000448'
+        with self.assertRaisesRegex(AlgorithmCannotBeSubstitutedException, 'No algorithm can be substituted'):
             core.config_task(task, model)
 
         task.simulation.algorithm.kisao_id = 'KISAO_0000496'
@@ -166,7 +167,7 @@ class CliTestCase(unittest.TestCase):
             core.config_task(task, model)
 
         task.simulation.algorithm.changes[0].new_value = '2e-8'
-        solver, _ = core.config_task(task, model)
+        solver, _, _ = core.config_task(task, model)
 
         # Run simulation using default model parameters and solver options
         results = core.exec_task(model, solver)
