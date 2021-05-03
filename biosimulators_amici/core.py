@@ -239,7 +239,7 @@ def config_task(task, model):
             if param_props is None:
                 if (
                     ALGORITHM_SUBSTITUTION_POLICY_LEVELS[algorithm_substitution_policy]
-                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.SAME_METHOD]
+                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.NONE]
                 ):
                     msg = "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id)
                     raise NotImplementedError(msg)
@@ -254,7 +254,7 @@ def config_task(task, model):
             if not validate_str_value(value, param_props['type']):
                 if (
                     ALGORITHM_SUBSTITUTION_POLICY_LEVELS[algorithm_substitution_policy]
-                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.SAME_METHOD]
+                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.NONE]
                 ):
                     msg = "'{}' is not a valid {} value for parameter {}".format(
                         value, param_props['type'].name, change.kisao_id)
