@@ -17,6 +17,8 @@ from biosimulators_utils.sedml import validation
 from biosimulators_utils.sedml.exec import exec_sed_doc
 from biosimulators_utils.simulator.utils import get_algorithm_substitution_policy
 from biosimulators_utils.utils.core import validate_str_value, parse_value, raise_errors_warnings
+from biosimulators_utils.warnings import warn, BioSimulatorsWarning
+from kisao.data_model import AlgorithmSubstitutionPolicy, ALGORITHM_SUBSTITUTION_POLICY_LEVELS
 from kisao.utils import get_preferred_substitute_algorithm_by_ids
 import amici
 import functools
@@ -222,9 +224,10 @@ def config_task(task, model):
     model.setTimepoints(numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1))
 
     # Load the algorithm specified by `sim.algorithm`
+    algorithm_substitution_policy = get_algorithm_substitution_policy()
     exec_kisao_id = get_preferred_substitute_algorithm_by_ids(
         sim.algorithm.kisao_id, KISAO_ALGORITHMS_MAP.keys(),
-        substitution_policy=get_algorithm_substitution_policy())
+        substitution_policy=algorithm_substitution_policy)
 
     solver = model.getSolver()
     args = {}
@@ -234,14 +237,33 @@ def config_task(task, model):
         for change in sim.algorithm.changes:
             param_props = KISAO_PARAMETERS_MAP.get(change.kisao_id, None)
             if param_props is None:
-                raise NotImplementedError(
-                    "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id))
+                if (
+                    ALGORITHM_SUBSTITUTION_POLICY_LEVELS[algorithm_substitution_policy]
+                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.SAME_METHOD]
+                ):
+                    msg = "Algorithm parameter with KiSAO id '{}' is not supported".format(change.kisao_id)
+                    raise NotImplementedError(msg)
+                else:
+                    msg = "Algorithm parameter with KiSAO id '{}' was ignored because it is not supported".format(change.kisao_id)
+                    warn(msg, BioSimulatorsWarning)
+                    continue
+
             param_setter = getattr(solver, 'set' + param_props['name'])
 
             value = change.new_value
             if not validate_str_value(value, param_props['type']):
-                raise ValueError("'{}' is not a valid {} value for parameter {}".format(
-                    value, param_props['type'].name, change.kisao_id))
+                if (
+                    ALGORITHM_SUBSTITUTION_POLICY_LEVELS[algorithm_substitution_policy]
+                    <= ALGORITHM_SUBSTITUTION_POLICY_LEVELS[AlgorithmSubstitutionPolicy.SAME_METHOD]
+                ):
+                    msg = "'{}' is not a valid {} value for parameter {}".format(
+                        value, param_props['type'].name, change.kisao_id)
+                    raise ValueError(msg)
+                else:
+                    msg = "'{}' was ignored because it is not a valid {} value for parameter {}".format(
+                        value, param_props['type'].name, change.kisao_id)
+                    warn(msg, BioSimulatorsWarning)
+                    continue
 
             param_setter(parse_value(value, param_props['type']))
             args[param_props['name']] = value
