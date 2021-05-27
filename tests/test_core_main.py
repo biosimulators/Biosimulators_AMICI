@@ -111,7 +111,7 @@ class CliTestCase(unittest.TestCase):
                 ),
                 simulation=sedml_data_model.UniformTimeCourseSimulation(
                     algorithm=sedml_data_model.Algorithm(
-                        kisao_id='KISAO_0000001',
+                        kisao_id='KISAO_0000437',
                         changes=[
                             sedml_data_model.AlgorithmParameterChange(
                                 kisao_id='KISAO_0000209',
@@ -159,7 +159,7 @@ class CliTestCase(unittest.TestCase):
                 core.config_task(task, model)
 
             task.simulation.algorithm.kisao_id = 'KISAO_0000496'
-            task.simulation.algorithm.changes[0].kisao_id = 'KISAO_0000001'
+            task.simulation.algorithm.changes[0].kisao_id = 'KISAO_0000531'
             with self.assertRaisesRegex(NotImplementedError, 'is not supported'):
                 core.config_task(task, model)
 
