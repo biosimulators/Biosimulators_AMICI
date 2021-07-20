@@ -272,15 +272,13 @@ class CliTestCase(unittest.TestCase):
         sim_filename = os.path.join(archive_dirname, 'sim_1.sedml')
         SedmlSimulationWriter().run(doc, sim_filename)
 
-        updated = datetime.datetime(2020, 1, 2, 1, 2, 3, tzinfo=dateutil.tz.tzutc())
         archive = combine_data_model.CombineArchive(
             contents=[
                 combine_data_model.CombineArchiveContent(
-                    'model_1.xml', combine_data_model.CombineArchiveContentFormat.SBML.value, updated=updated),
+                    'model_1.xml', combine_data_model.CombineArchiveContentFormat.SBML.value),
                 combine_data_model.CombineArchiveContent(
-                    'sim_1.sedml', combine_data_model.CombineArchiveContentFormat.SED_ML.value, updated=updated),
+                    'sim_1.sedml', combine_data_model.CombineArchiveContentFormat.SED_ML.value),
             ],
-            updated=updated,
         )
         archive_filename = os.path.join(self.dirname,
                                         'archive.omex' if algorithm is None else 'archive-{}.omex'.format(algorithm.kisao_id))
