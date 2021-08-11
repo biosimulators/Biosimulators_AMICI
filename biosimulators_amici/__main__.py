@@ -11,7 +11,7 @@ from .core import exec_sedml_docs_in_combine_archive
 from biosimulators_utils.simulator.cli import build_cli
 import amici
 
-App = build_cli('amici', __version__,
+App = build_cli('biosimulators-amici', __version__,
                 'AMICI', amici.__version__, 'https://github.com/AMICI-dev/AMICI',
                 exec_sedml_docs_in_combine_archive)
 

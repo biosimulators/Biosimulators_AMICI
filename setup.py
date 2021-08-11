@@ -48,7 +48,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'amici = biosimulators_amici.__main__:main',
+            'biosimulators-amici = biosimulators_amici.__main__:main',
         ],
     },
 )

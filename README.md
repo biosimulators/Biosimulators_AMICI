@@ -28,7 +28,7 @@ docker pull ghcr.io/biosimulators/amici
 
 ### Local usage
 ```
-usage: amici [-h] [-d] [-q] -i ARCHIVE [-o OUT_DIR] [-v]
+usage: biosimulators-amici [-h] [-d] [-q] -i ARCHIVE [-o OUT_DIR] [-v]
 
 BioSimulators-compliant command-line interface to the AMICI simulation program <https://github.com/AMICI-dev/AMICI>.
 

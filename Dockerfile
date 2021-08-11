@@ -47,5 +47,5 @@ ENV VERBOSE=0 \
     MPLBACKEND=PDF
 
 # Entrypoint
-ENTRYPOINT ["amici"]
+ENTRYPOINT ["biosimulators-amici"]
 CMD []
