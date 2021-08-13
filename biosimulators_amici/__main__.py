@@ -6,13 +6,13 @@
 :License: MIT
 """
 
+from . import get_simulator_version
 from ._version import __version__
 from .core import exec_sedml_docs_in_combine_archive
 from biosimulators_utils.simulator.cli import build_cli
-import amici
 
 App = build_cli('biosimulators-amici', __version__,
-                'AMICI', amici.__version__, 'https://github.com/AMICI-dev/AMICI',
+                'AMICI', get_simulator_version(), 'https://github.com/AMICI-dev/AMICI',
                 exec_sedml_docs_in_combine_archive)
 
 
