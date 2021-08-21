@@ -319,7 +319,7 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
         :obj:`NotImplementedError`: if a symbol could not be recorded
         :obj:`ValueError`: if a target could not be recorded
     """
-    var_id_to_state_index = {id: index for index, id in enumerate(model.getStateIds())}
+    sbml_id_to_obs_index = {id: index for index, id in enumerate(model.getObservableIds())}
 
     variable_results = VariableResults()
     unpredicted_symbols = []
@@ -332,12 +332,12 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
                 unpredicted_symbols.append(variable.symbol)
 
         else:
-            var_id = target_x_paths_ids.get(variable.target, None)
-            i_state = var_id_to_state_index.get(var_id, None)
-            if i_state is None:
+            sbml_id = target_x_paths_ids.get(variable.target, None)
+            i_obs = sbml_id_to_obs_index.get(sbml_id, None)
+            if i_obs is None:
                 unpredicted_targets.append(variable.target)
             else:
-                variable_results[variable.id] = results['x'][:, i_state]
+                variable_results[variable.id] = results['y'][:, i_obs]
 
     if unpredicted_symbols:
         raise NotImplementedError("".join([
@@ -353,10 +353,7 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
                 '\n  - '.join(sorted(unpredicted_targets)),
             ),
             'Targets must have one of the following ids:\n  - {}'.format(
-                '\n  - '.join(sorted((
-                    [s.getId() for s in sbml_model.species]
-                    + [p.getId() for p in sbml_model.parameters]
-                ))),
+                '\n  - '.join(sorted(model.getObservableIds())),
             ),
         ]))
 

@@ -87,6 +87,21 @@ class CliTestCase(unittest.TestCase):
                 target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='IL']",
                 target_namespaces=self.NAMESPACES,
                 task=task),
+            sedml_data_model.Variable(
+                id='kf_0',
+                target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='kf_0']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+            sedml_data_model.Variable(
+                id='comp1',
+                target="/sbml:sbml/sbml:model/sbml:listOfCompartments/sbml:compartment[@id='comp1']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+            sedml_data_model.Variable(
+                id='React0',
+                target="/sbml:sbml/sbml:model/sbml:listOfReactions/sbml:reaction[@id='React0']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
         ]
 
         variable_results, _ = core.exec_sed_task(task, variables)
@@ -100,6 +115,79 @@ class CliTestCase(unittest.TestCase):
 
         for results in variable_results.values():
             self.assertFalse(numpy.any(numpy.isnan(results)))
+        numpy.testing.assert_almost_equal(
+            variable_results['kf_0'],
+            numpy.full((task.simulation.number_of_points + 1), 300000000.),
+        )
+        numpy.testing.assert_almost_equal(
+            variable_results['comp1'],
+            numpy.full((task.simulation.number_of_points + 1), 1E-16),
+        )
+
+    def test_exec_sed_task_successfully_with_assignment_rule(self):
+        task = sedml_data_model.Task(
+            model=sedml_data_model.Model(
+                source=os.path.join(os.path.dirname(__file__), 'fixtures', 'BIOMD0000000297_url.xml'),
+                language=sedml_data_model.ModelLanguage.SBML.value,
+                changes=[],
+            ),
+            simulation=sedml_data_model.UniformTimeCourseSimulation(
+                algorithm=sedml_data_model.Algorithm(
+                    kisao_id='KISAO_0000496',
+                ),
+                initial_time=0.,
+                output_start_time=0.,
+                output_end_time=10.,
+                number_of_points=10,
+            ),
+        )
+
+        variables = [
+            sedml_data_model.Variable(
+                id='time',
+                symbol=sedml_data_model.Symbol.time,
+                task=task),
+            sedml_data_model.Variable(
+                id='kswe',
+                target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='kswe']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+            sedml_data_model.Variable(
+                id='kswe_prime',
+                target="/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter[@id='kswe_prime']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+            sedml_data_model.Variable(
+                id='compartment',
+                target="/sbml:sbml/sbml:model/sbml:listOfCompartments/sbml:compartment[@id='compartment']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+            sedml_data_model.Variable(
+                id='R1',
+                target="/sbml:sbml/sbml:model/sbml:listOfReactions/sbml:reaction[@id='R1']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+        ]
+
+        variable_results, _ = core.exec_sed_task(task, variables)
+
+        self.assertTrue(sorted(variable_results.keys()), sorted([var.id for var in variables]))
+        self.assertEqual(variable_results[variables[0].id].shape, (task.simulation.number_of_points + 1,))
+        numpy.testing.assert_almost_equal(
+            variable_results['time'],
+            numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
+        )
+
+        for results in variable_results.values():
+            self.assertFalse(numpy.any(numpy.isnan(results)))
+        numpy.testing.assert_almost_equal(
+            variable_results['kswe_prime'],
+            numpy.full((task.simulation.number_of_points + 1), 2.),
+        )
+        numpy.testing.assert_almost_equal(
+            variable_results['compartment'],
+            numpy.full((task.simulation.number_of_points + 1), 1.),
+        )
 
     def test_exec_sed_task_error_handling(self):
         with mock.patch.dict('os.environ', {'ALGORITHM_SUBSTITUTION_POLICY': 'NONE'}):

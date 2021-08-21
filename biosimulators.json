@@ -261,7 +261,15 @@
         {
           "variables": "parameter values",
           "targetPattern": "/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter/@value"
-        }
+        },
+        {
+          "variables": "reaction fluxes",
+          "targetPattern": "/sbml:sbml/sbml:model/sbml:listOfReactions/sbml:reaction"
+        },
+        {
+          "variables": "compartment sizes",
+          "targetPattern": "/sbml:sbml/sbml:model/sbml:listOfCompartments/sbml:compartment"
+        }        
       ],
       "availableSoftwareInterfaceTypes": [
         "library",
