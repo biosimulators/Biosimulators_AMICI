@@ -8,7 +8,7 @@
 
 from .data_model import KISAO_ALGORITHMS_MAP, KISAO_PARAMETERS_MAP
 from biosimulators_utils.combine.exec import exec_sedml_docs_in_archive
-from biosimulators_utils.config import get_config
+from biosimulators_utils.config import get_config, Config  # noqa: F401
 from biosimulators_utils.log.data_model import CombineArchiveLog, TaskLog  # noqa: F401
 from biosimulators_utils.viz.data_model import VizFormat  # noqa: F401
 from biosimulators_utils.report.data_model import ReportFormat, VariableResults  # noqa: F401
@@ -48,11 +48,7 @@ __all__ = [
 ]
 
 
-def exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
-                                       return_results=False,
-                                       report_formats=None, plot_formats=None,
-                                       bundle_outputs=None, keep_individual_outputs=None,
-                                       raise_exceptions=True):
+def exec_sedml_docs_in_combine_archive(archive_filename, out_dir, config=None):
     """ Execute the SED tasks defined in a COMBINE/OMEX archive and save the outputs
 
     Args:
@@ -64,12 +60,7 @@ def exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
             * HDF5: directory in which to save a single HDF5 file (``{ out_dir }/reports.h5``),
               with reports at keys ``{ relative-path-to-SED-ML-file-within-archive }/{ report.id }`` within the HDF5 file
 
-        return_results (:obj:`bool`, optional): whether to return the result of each output of each SED-ML file
-        report_formats (:obj:`list` of :obj:`ReportFormat`, optional): report format (e.g., csv or h5)
-        plot_formats (:obj:`list` of :obj:`VizFormat`, optional): report format (e.g., pdf)
-        bundle_outputs (:obj:`bool`, optional): if :obj:`True`, bundle outputs into archives for reports and plots
-        keep_individual_outputs (:obj:`bool`, optional): if :obj:`True`, keep individual output files
-        raise_exceptions (:obj:`bool`, optional): whether to raise exceptions
+        config (:obj:`Config`, optional): BioSimulators common configuration
 
     Returns:
         :obj:`CombineArchiveLog`: log
@@ -77,21 +68,17 @@ def exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
     sed_doc_executer = functools.partial(exec_sed_doc, exec_sed_task)
     return exec_sedml_docs_in_archive(sed_doc_executer, archive_filename, out_dir,
                                       apply_xml_model_changes=True,
-                                      return_results=return_results,
-                                      report_formats=report_formats,
-                                      plot_formats=plot_formats,
-                                      bundle_outputs=bundle_outputs,
-                                      keep_individual_outputs=keep_individual_outputs,
-                                      raise_exceptions=raise_exceptions)
+                                      config=None)
 
 
-def exec_sed_task(task, variables, log=None):
+def exec_sed_task(task, variables, log=None, config=None):
     ''' Execute a task and save its results
 
     Args:
        task (:obj:`Task`): task
        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
        log (:obj:`TaskLog`, optional): log for the task
+       config (:obj:`Config`, optional): BioSimulators common configuration
 
     Returns:
         :obj:`tuple`:
@@ -99,15 +86,18 @@ def exec_sed_task(task, variables, log=None):
             :obj:`VariableResults`: results of variables
             :obj:`TaskLog`: log
     '''
-    log = log or TaskLog()
+    if not config:
+        config = get_config()
+    if config.LOG and not log:
+        log = TaskLog()
 
-    target_x_paths_ids = validate_sed_task(task, variables)
+    target_x_paths_ids = validate_sed_task(task, variables, config=config)
 
     # Read the model for the task
     model, sbml_model, model_name, model_dir = import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
 
     # Configure task
-    solver, solver_kisao_id, solver_arguments = config_task(task, model)
+    solver, solver_kisao_id, solver_arguments = config_task(task, model, config=config)
 
     # Run simulation using default model parameters and solver options
     results = exec_task(model, solver)
@@ -121,30 +111,32 @@ def exec_sed_task(task, variables, log=None):
     cleanup_model(model_name, model_dir)
 
     # log action
-    log.algorithm = solver_kisao_id
-    arguments = solver_arguments
-    arguments['solver'] = amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__
-    log.simulator_details = {
-        'method': amici.runAmiciSimulation.__module__ + '.' + amici.runAmiciSimulation.__name__,
-        'arguments': arguments,
-    }
+    if config.LOG:
+        log.algorithm = solver_kisao_id
+        arguments = solver_arguments
+        arguments['solver'] = amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__
+        log.simulator_details = {
+            'method': amici.runAmiciSimulation.__module__ + '.' + amici.runAmiciSimulation.__name__,
+            'arguments': arguments,
+        }
 
     # return results and log
     return variable_results, log
 
 
-def validate_sed_task(task, variables):
+def validate_sed_task(task, variables, config=None):
     """ Validate that AMICI can support a SED task
 
     Args:
        task (:obj:`Task`): task
        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
+       config (:obj:`Config`, optional): BioSimulators common configuration
 
     Returns:
         :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps each XPath to the
             value of the attribute of the object in the XML file that matches the XPath
     """
-    config = get_config()
+    config = config or get_config()
 
     model = task.model
     sim = task.simulation
@@ -215,12 +207,13 @@ def cleanup_model(model_name, model_dir):
     shutil.rmtree(model_dir)
 
 
-def config_task(task, model):
+def config_task(task, model, config=None):
     """ Configure an AMICI model for a SED task
 
     Args:
         task (:obj:`Task`): task
         model (:obj:`amici.amici.ModelPtr`): AMICI model
+        config (:obj:`Config`): configuration
 
     Returns:
         :obj:`tuple`:
@@ -240,7 +233,7 @@ def config_task(task, model):
     model.setTimepoints(numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1))
 
     # Load the algorithm specified by `sim.algorithm`
-    algorithm_substitution_policy = get_algorithm_substitution_policy()
+    algorithm_substitution_policy = get_algorithm_substitution_policy(config=config)
     exec_kisao_id = get_preferred_substitute_algorithm_by_ids(
         sim.algorithm.kisao_id, KISAO_ALGORITHMS_MAP.keys(),
         substitution_policy=algorithm_substitution_policy)

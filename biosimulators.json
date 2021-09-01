@@ -19,6 +19,10 @@
     },
     "operatingSystemType": "Linux"
   },
+  "pythonApi": {
+    "package": "biosimulators-amici",
+    "module": "biosimulators_amici"
+  },
   "authors": [
     {
       "firstName": "Fabian",

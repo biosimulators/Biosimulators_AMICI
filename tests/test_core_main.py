@@ -9,8 +9,8 @@
 from biosimulators_amici import __main__
 from biosimulators_amici import core
 from biosimulators_utils.combine import data_model as combine_data_model
-from biosimulators_utils.combine.exceptions import CombineArchiveExecutionError
 from biosimulators_utils.combine.io import CombineArchiveWriter
+from biosimulators_utils.config import get_config
 from biosimulators_utils.report import data_model as report_data_model
 from biosimulators_utils.report.io import ReportReader
 from biosimulators_utils.simulator.exec import exec_sedml_docs_in_archive_with_containerized_simulator
@@ -243,7 +243,7 @@ class CliTestCase(unittest.TestCase):
 
             # Configure task
             task.simulation.algorithm.kisao_id = 'KISAO_0000448'
-            with self.assertRaisesRegex(AlgorithmCannotBeSubstitutedException, 'No algorithm can be substituted'):
+            with self.assertRaisesRegex(AlgorithmCannotBeSubstitutedException, 'Algorithms cannot be substituted'):
                 core.config_task(task, model)
 
             task.simulation.algorithm.kisao_id = 'KISAO_0000496'
@@ -335,13 +335,15 @@ class CliTestCase(unittest.TestCase):
         doc, archive_filename = self._build_combine_archive()
 
         out_dir = os.path.join(self.dirname, 'out')
-        core.exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
-                                                report_formats=[
-                                                    report_data_model.ReportFormat.h5,
-                                                    report_data_model.ReportFormat.csv,
-                                                ],
-                                                bundle_outputs=True,
-                                                keep_individual_outputs=True)
+
+        config = get_config()
+        config.REPORT_FORMATS = [report_data_model.ReportFormat.h5, report_data_model.ReportFormat.csv]
+        config.BUNDLE_OUTPUTS = True
+        config.KEEP_INDIVIDUAL_OUTPUTS = True
+
+        _, log = core.exec_sedml_docs_in_combine_archive(archive_filename, out_dir, config=config)
+        if log.exception:
+            raise log.exception
 
         self._assert_combine_archive_outputs(doc, out_dir)
 
@@ -507,13 +509,15 @@ class CliTestCase(unittest.TestCase):
             doc, archive_filename = self._build_combine_archive(algorithm=alg)
 
             out_dir = os.path.join(self.dirname, alg.kisao_id)
-            core.exec_sedml_docs_in_combine_archive(archive_filename, out_dir,
-                                                    report_formats=[
-                                                        report_data_model.ReportFormat.h5,
-                                                        report_data_model.ReportFormat.csv,
-                                                    ],
-                                                    bundle_outputs=True,
-                                                    keep_individual_outputs=True)
+
+            config = get_config()
+            config.REPORT_FORMATS = [report_data_model.ReportFormat.h5, report_data_model.ReportFormat.csv]
+            config.BUNDLE_OUTPUTS = True
+            config.KEEP_INDIVIDUAL_OUTPUTS = True
+
+            _, log = core.exec_sedml_docs_in_combine_archive(archive_filename, out_dir, config=config)
+            if log.exception:
+                raise log.exception
             self._assert_combine_archive_outputs(doc, out_dir)
 
     def test_raw_cli(self):
