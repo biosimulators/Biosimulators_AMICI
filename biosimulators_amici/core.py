@@ -68,7 +68,7 @@ def exec_sedml_docs_in_combine_archive(archive_filename, out_dir, config=None):
     sed_doc_executer = functools.partial(exec_sed_doc, exec_sed_task)
     return exec_sedml_docs_in_archive(sed_doc_executer, archive_filename, out_dir,
                                       apply_xml_model_changes=True,
-                                      config=None)
+                                      config=config)
 
 
 def exec_sed_task(task, variables, log=None, config=None):
