@@ -6,7 +6,8 @@ BioSimulators-AMICI is available as a command-line program and as a command-line
 Command-line program
 --------------------
 
-After installing `Python <https://www.python.org/downloads/>`_ (>= 3.7) and `pip <https://pip.pypa.io/>`_, run the following command to install BioSimulators-AMICI:
+After installing `Python <https://www.python.org/downloads/>`_ (>= 3.7), `pip <https://pip.pypa.io/>`_, `libATLAS <http://math-atlas.sourceforge.net/>`_, g++, and `SWIG <https://www.swig.org/>`_
+run the following command to install BioSimulators-AMICI:
 
 .. code-block:: text
 
