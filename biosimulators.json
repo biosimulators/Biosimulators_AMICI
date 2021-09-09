@@ -21,7 +21,8 @@
   },
   "pythonApi": {
     "package": "biosimulators-amici",
-    "module": "biosimulators_amici"
+    "module": "biosimulators_amici",
+    "installationInstructions": "https://docs.biosimulators.org/Biosimulators_AMICI/installation.html"
   },
   "authors": [
     {

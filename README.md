@@ -14,6 +14,14 @@ A simple web application and web service for using AMICI to execute COMBINE/OMEX
 
 ## Installation
 
+### Dependencies
+
+* Python >= 3.7
+* pip
+* libatlas
+* g++
+* swig
+
 ### Install Python package
 ```
 pip install biosimulators-amici
