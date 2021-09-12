@@ -124,6 +124,42 @@ class CliTestCase(unittest.TestCase):
             numpy.full((task.simulation.number_of_points + 1), 1E-16),
         )
 
+    def test_exec_sed_task_negative_initial_time(self):
+        task = sedml_data_model.Task(
+            model=sedml_data_model.Model(
+                source=os.path.join(os.path.dirname(__file__), 'fixtures', 'biomd0000000002.xml'),
+                language=sedml_data_model.ModelLanguage.SBML.value,
+            ),
+            simulation=sedml_data_model.UniformTimeCourseSimulation(
+                algorithm=sedml_data_model.Algorithm(
+                    kisao_id='KISAO_0000496',
+                ),
+                initial_time=-5.,
+                output_start_time=0.,
+                output_end_time=10.,
+                number_of_points=10,
+            ),
+        )
+
+        variables = [
+            sedml_data_model.Variable(
+                id='time',
+                symbol=sedml_data_model.Symbol.time,
+                task=task),
+            sedml_data_model.Variable(
+                id='AL',
+                target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='AL']",
+                target_namespaces=self.NAMESPACES,
+                task=task),
+        ]
+
+        variable_results, _ = core.exec_sed_task(task, variables)
+
+        numpy.testing.assert_almost_equal(
+            variable_results['time'],
+            numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
+        )
+
     def test_exec_sed_task_successfully_with_assignment_rule(self):
         task = sedml_data_model.Task(
             model=sedml_data_model.Model(
