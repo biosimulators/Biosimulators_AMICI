@@ -31,7 +31,7 @@ import tempfile
 import unittest
 
 
-class CliTestCase(unittest.TestCase):
+class CoreMainTestCase(unittest.TestCase):
     DOCKER_IMAGE = 'ghcr.io/biosimulators/biosimulators_amici/amici'
     NAMESPACES = {
         'sbml': 'http://www.sbml.org/sbml/level2/version4',
@@ -108,18 +108,18 @@ class CliTestCase(unittest.TestCase):
 
         self.assertTrue(sorted(variable_results.keys()), sorted([var.id for var in variables]))
         self.assertEqual(variable_results[variables[0].id].shape, (task.simulation.number_of_points + 1,))
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['time'],
             numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
         )
 
         for results in variable_results.values():
             self.assertFalse(numpy.any(numpy.isnan(results)))
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['kf_0'],
             numpy.full((task.simulation.number_of_points + 1), 300000000.),
         )
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['comp1'],
             numpy.full((task.simulation.number_of_points + 1), 1E-16),
         )
@@ -155,7 +155,7 @@ class CliTestCase(unittest.TestCase):
 
         variable_results, _ = core.exec_sed_task(task, variables)
 
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['time'],
             numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
         )
@@ -209,21 +209,96 @@ class CliTestCase(unittest.TestCase):
 
         self.assertTrue(sorted(variable_results.keys()), sorted([var.id for var in variables]))
         self.assertEqual(variable_results[variables[0].id].shape, (task.simulation.number_of_points + 1,))
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['time'],
             numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
         )
 
         for results in variable_results.values():
             self.assertFalse(numpy.any(numpy.isnan(results)))
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['kswe_prime'],
             numpy.full((task.simulation.number_of_points + 1), 2.),
         )
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             variable_results['compartment'],
             numpy.full((task.simulation.number_of_points + 1), 1.),
         )
+
+    def test_exec_sed_task_with_changes(self):
+        task = sedml_data_model.Task(
+            model=sedml_data_model.Model(
+                source=os.path.join(os.path.dirname(__file__), 'fixtures', 'biomd0000000002.xml'),
+                language=sedml_data_model.ModelLanguage.SBML.value,
+                changes=[],
+            ),
+            simulation=sedml_data_model.UniformTimeCourseSimulation(
+                algorithm=sedml_data_model.Algorithm(
+                    kisao_id='KISAO_0000496',
+                ),
+                initial_time=0.,
+                output_start_time=0.,
+                output_end_time=10.,
+                number_of_points=10,
+            ),
+        )
+        model = task.model
+        sim = task.simulation
+
+        variable_ids = ['BLL', 'IL', 'AL', 'A', 'BL', 'B', 'DLL', 'D', 'ILL', 'DL', 'I', 'ALL', 'L']
+        variables = []
+        for variable_id in variable_ids:
+            model.changes.append(sedml_data_model.ModelAttributeChange(
+                target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='{}']".format(variable_id),
+                target_namespaces=self.NAMESPACES,
+                new_value=None))
+            variables.append(sedml_data_model.Variable(
+                id=variable_id,
+                target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='{}']".format(variable_id),
+                target_namespaces=self.NAMESPACES,
+                task=task))
+
+        preprocessed_task = core.preprocess_sed_task(task, variables)
+
+        model.changes = []
+        results, _ = core.exec_sed_task(task, variables, preprocessed_task=preprocessed_task)
+        with self.assertRaises(AssertionError):
+            for variable_id in variable_ids:
+                numpy.testing.assert_allclose(
+                    results[variable_id][0:int(sim.number_of_points / 2 + 1)],
+                    results[variable_id][-int(sim.number_of_points / 2 + 1):],
+                )
+
+        sim.output_end_time = sim.output_end_time / 2
+        sim.number_of_points = int(sim.number_of_points / 2)
+        results2, _ = core.exec_sed_task(task, variables, preprocessed_task=preprocessed_task)
+        for variable_id in variable_ids:
+            numpy.testing.assert_allclose(
+                results2[variable_id],
+                results[variable_id][0:int(sim.number_of_points + 1)],
+            )
+
+        for variable_id in variable_ids:
+            model.changes.append(sedml_data_model.ModelAttributeChange(
+                target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='{}']".format(variable_id),
+                target_namespaces=self.NAMESPACES,
+                new_value=results2[variable_id][-1]))
+        results3, _ = core.exec_sed_task(task, variables, preprocessed_task=preprocessed_task)
+        for variable_id in variable_ids:
+            numpy.testing.assert_allclose(
+                results3[variable_id],
+                results[variable_id][-int(sim.number_of_points + 1):],
+            )
+
+        task.model.changes = [
+            sedml_data_model.ModelAttributeChange(
+                target="/sbml:sbml/sbml:model".format(variable_id),
+                target_namespaces=self.NAMESPACES,
+                new_value=None,
+            )
+        ]
+        with self.assertRaises(ValueError):
+            core.preprocess_sed_task(task, variables)
 
     def test_exec_sed_task_error_handling(self):
         with mock.patch.dict('os.environ', {'ALGORITHM_SUBSTITUTION_POLICY': 'NONE'}):
@@ -272,10 +347,11 @@ class CliTestCase(unittest.TestCase):
                     task=task),
             ]
 
-            target_x_paths_ids = core.validate_sed_task(task, variables)
+            _, variable_target_sbml_id_map = core.validate_task(task, variables)
 
             # Read the model for the task
-            model, sbml_model, model_name, model_dir = core.import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
+            model, sbml_model, model_name, model_dir = core.import_model_from_sbml(
+                task.model.source, sorted(variable_target_sbml_id_map.values()))
 
             # Configure task
             task.simulation.algorithm.kisao_id = 'KISAO_0000448'
@@ -295,6 +371,13 @@ class CliTestCase(unittest.TestCase):
             task.simulation.algorithm.changes[0].new_value = '2e-8'
             solver, _, _ = core.config_task(task, model)
 
+            model.setT0(task.simulation.initial_time)
+            model.setTimepoints(numpy.linspace(
+                task.simulation.output_start_time,
+                task.simulation.output_end_time,
+                task.simulation.number_of_points + 1,
+            ))
+
             # Run simulation using default model parameters and solver options
             results = core.exec_task(model, solver)
 
@@ -303,19 +386,20 @@ class CliTestCase(unittest.TestCase):
             # This should save all of the variables specified by `simulation.model.variables`.
             variables[0].symbol = 'urn:sedml:symbol:undefined'
             with self.assertRaisesRegex(NotImplementedError, 'symbols are not supported'):
-                core.extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results)
+                core.validate_variables(model, variables, variable_target_sbml_id_map)
 
             variables[0].symbol = sedml_data_model.Symbol.time
             variables[1].target = "/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='undefined']"
             with self.assertRaisesRegex(ValueError, 'targets could not be recorded'):
-                core.extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results)
+                core.validate_variables(model, variables, variable_target_sbml_id_map)
 
             variables[1].target = "/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='AL']"
-            variable_results = core.extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results)
+            variable_observable_map = core.validate_variables(model, variables, variable_target_sbml_id_map)
+            variable_results = core.extract_variables_from_results(variables, variable_observable_map, results)
 
             self.assertTrue(sorted(variable_results.keys()), sorted([var.id for var in variables]))
             self.assertEqual(variable_results[variables[0].id].shape, (task.simulation.number_of_points + 1,))
-            numpy.testing.assert_almost_equal(
+            numpy.testing.assert_allclose(
                 variable_results['time'],
                 numpy.linspace(task.simulation.output_start_time, task.simulation.output_end_time, task.simulation.number_of_points + 1),
             )
@@ -517,7 +601,7 @@ class CliTestCase(unittest.TestCase):
 
         sim = doc.tasks[0].simulation
         self.assertEqual(len(report_results[report.data_sets[0].id]), sim.number_of_points + 1)
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             report_results[report.data_sets[0].id],
             numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1),
         )
@@ -532,7 +616,7 @@ class CliTestCase(unittest.TestCase):
 
         sim = doc.tasks[0].simulation
         self.assertEqual(len(report_results[report.data_sets[0].id]), sim.number_of_points + 1)
-        numpy.testing.assert_almost_equal(
+        numpy.testing.assert_allclose(
             report_results[report.data_sets[0].id],
             numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1),
         )

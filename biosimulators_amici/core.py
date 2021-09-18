@@ -12,7 +12,7 @@ from biosimulators_utils.config import get_config, Config  # noqa: F401
 from biosimulators_utils.log.data_model import CombineArchiveLog, TaskLog, StandardOutputErrorCapturerLevel  # noqa: F401
 from biosimulators_utils.viz.data_model import VizFormat  # noqa: F401
 from biosimulators_utils.report.data_model import ReportFormat, VariableResults  # noqa: F401
-from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, UniformTimeCourseSimulation,  # noqa: F401
+from biosimulators_utils.sedml.data_model import (Task, ModelLanguage, ModelAttributeChange, UniformTimeCourseSimulation,  # noqa: F401
                                                   Variable, Symbol)
 from biosimulators_utils.sedml import validation
 from biosimulators_utils.sedml.exec import exec_sed_doc as base_exec_sed_doc
@@ -41,12 +41,33 @@ __all__ = [
     'exec_sed_doc',
     'exec_sed_task',
     'preprocess_sed_task',
-    'validate_sed_task',
+    'validate_task',
     'import_model_from_sbml',
     'cleanup_model',
     'config_task',
     'exec_task',
+    'validate_model_changes',
+    'validate_variables',
     'extract_variables_from_results',
+]
+
+
+STATE_TYPES = [
+    {
+        'ids': 'getFixedParameterIds',
+        'getter': 'getFixedParameters',
+        'setter': 'setFixedParameters',
+    },
+    {
+        'ids': 'getParameterIds',
+        'getter': 'getParameters',
+        'setter': 'setParameters',
+    },
+    {
+        'ids': 'getStateIds',
+        'getter': 'getInitialStates',
+        'setter': 'setInitialStates',
+    },
 ]
 
 
@@ -121,7 +142,7 @@ def exec_sed_task(task, variables, preprocessed_task=None, log=None, config=None
     Args:
         task (:obj:`Task`): task
         variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
-        preprocessed_task (:obj:`object`, optional): preprocessed information about the task, including possible
+        preprocessed_task (:obj:`dict`, optional): preprocessed information about the task, including possible
             model changes and variables. This can be used to avoid repeatedly executing the same initialization
             for repeated calls to this method.
         log (:obj:`TaskLog`, optional): log for the task
@@ -135,46 +156,66 @@ def exec_sed_task(task, variables, preprocessed_task=None, log=None, config=None
     '''
     if not config:
         config = get_config()
+
     if config.LOG and not log:
         log = TaskLog()
 
     if preprocessed_task is None:
         preprocessed_task = preprocess_sed_task(task, variables, config=config)
 
-    target_x_paths_ids = validate_sed_task(task, variables, config=config)
+    # get model
+    amici_model = preprocessed_task['model']['model']
 
-    # Read the model for the task
-    model, sbml_model, model_name, model_dir = import_model_from_sbml(task.model.source, sorted(target_x_paths_ids.values()))
+    # modify model
+    if task.model.changes:
+        raise_errors_warnings(validation.validate_model_change_types(task.model.changes, (ModelAttributeChange,)),
+                              error_summary='Changes for model `{}` are not supported.'.format(task.model.id))
+        model_change_setter_map = preprocessed_task['model']['model_change_setter_map']
 
-    # Configure task
-    solver, solver_kisao_id, solver_arguments = config_task(task, model, config=config)
+        states = {
+            state_type['setter']: {'modified': False, 'values': numpy.array(getattr(amici_model, state_type['getter'])())}
+            for state_type in STATE_TYPES
+        }
+
+        for change in task.model.changes:
+            change_setter, i_change = model_change_setter_map[change.target]
+            states[change_setter]['modified'] = True
+            states[change_setter]['values'][i_change] = float(change.new_value)
+
+        for state_setter, state in states.items():
+            if state['modified']:
+                getattr(amici_model, state_setter)(state['values'])
+
+    # Configure simulation
+    # - Simulate the model from `initial_time` to `output_end_time`
+    # - record results from `output_start_time` to `output_end_time`
+    amici_model.setT0(task.simulation.initial_time)
+    amici_model.setTimepoints(numpy.linspace(
+        task.simulation.output_start_time,
+        task.simulation.output_end_time,
+        task.simulation.number_of_points + 1,
+    ))
 
     # Run simulation using default model parameters and solver options
-    results = exec_task(model, solver)
+    solver = preprocessed_task['simulation']['solver']
+    results = exec_task(amici_model, solver)
 
     # Save a report of the results of the simulation with `simulation.num_time_points` time points
     # beginning at `simulation.output_start_time` to `out_filename` in `out_format` format.
     # This should save all of the variables specified by `simulation.model.variables`.
-    variable_results = extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results)
-
-    # cleanup module and temporary directory
-    cleanup_model(model_name, model_dir)
+    variable_observable_map = preprocessed_task['model']['variable_observable_map']
+    variable_results = extract_variables_from_results(variables, variable_observable_map, results)
 
     # log action
     if config.LOG:
-        log.algorithm = solver_kisao_id
-        arguments = solver_arguments
-        arguments['solver'] = amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__
-        log.simulator_details = {
-            'method': amici.runAmiciSimulation.__module__ + '.' + amici.runAmiciSimulation.__name__,
-            'arguments': arguments,
-        }
+        log.algorithm = preprocessed_task['simulation']['algorithm_kisao_id']
+        log.simulator_details = preprocessed_task['simulation']['simulator_details']
 
     # return results and log
     return variable_results, log
 
 
-def validate_sed_task(task, variables, config=None):
+def validate_task(task, variables, config=None):
     """ Validate that AMICI can support a SED task
 
     Args:
@@ -183,8 +224,12 @@ def validate_sed_task(task, variables, config=None):
        config (:obj:`Config`, optional): BioSimulators common configuration
 
     Returns:
-        :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps each XPath to the
-            value of the attribute of the object in the XML file that matches the XPath
+        :obj:`tuple`:
+
+            * :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps the XPath of each target of each
+                model change to the SBML id of the associated model object
+            * :obj:`dict` of :obj:`str` to :obj:`str`: dictionary that maps the XPath of each variable target
+                to the SBML id of the associated model object
     """
     config = config or get_config()
 
@@ -196,7 +241,7 @@ def validate_sed_task(task, variables, config=None):
                               error_summary='Task `{}` is invalid.'.format(task.id))
         raise_errors_warnings(validation.validate_model_language(model.language, ModelLanguage.SBML),
                               error_summary='Language for model `{}` is not supported.'.format(model.id))
-        raise_errors_warnings(validation.validate_model_change_types(model.changes, ()),
+        raise_errors_warnings(validation.validate_model_change_types(model.changes, (ModelAttributeChange,)),
                               error_summary='Changes for model `{}` are not supported.'.format(model.id))
         raise_errors_warnings(*validation.validate_model_changes(model),
                               error_summary='Changes for model `{}` are invalid.'.format(model.id))
@@ -208,7 +253,10 @@ def validate_sed_task(task, variables, config=None):
                               error_summary='Data generator variables for task `{}` are invalid.'.format(task.id))
 
     model_etree = lxml.etree.parse(model.source)
-    return validation.validate_target_xpaths(variables, model_etree, attr='id')
+    return (
+        validation.validate_target_xpaths(task.model.changes, model_etree, attr='id'),
+        validation.validate_target_xpaths(variables, model_etree, attr='id'),
+    )
 
 
 def import_model_from_sbml(filename, variables):
@@ -277,11 +325,7 @@ def config_task(task, model, config=None):
         :obj:`NotImplementedError`: the task involves and unsupported algorithm or parameter
         :obj:`ValueError`: the task involves an invalid value of a parameter
     """
-    # Simulate the model from `initial_time` to `output_end_time`
-    # record results from `output_start_time` to `output_end_time`
     sim = task.simulation
-    model.setT0(sim.initial_time)
-    model.setTimepoints(numpy.linspace(sim.output_start_time, sim.output_end_time, sim.number_of_points + 1))
 
     # Load the algorithm specified by `sim.algorithm`
     algorithm_substitution_policy = get_algorithm_substitution_policy(config=config)
@@ -345,43 +389,89 @@ def exec_task(model, solver):
     return amici.runAmiciSimulation(model, solver)
 
 
-def extract_variables_from_results(model, sbml_model, variables, target_x_paths_ids, results):
-    """ Extract data generator variables from results
+def validate_model_changes(model, changes, change_sbml_id_map):
+    """ Validate model changes
 
     Args:
         model (:obj:`amici.amici.ModelPtr`): AMICI model
-        sbml_model (:obj:`libsbml.Model`): SBML model
-        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
-        target_x_paths_ids (:obj:`dict` of :obj:`str` to :obj:`str`): dictionary that maps each XPath to the
+        changes (:obj:`list` of :obj:`ModelAttributeChange`): model changes
+        change_sbml_id_map (:obj:`dict` of :obj:`str` to :obj:`str`): dictionary that maps each XPath to the
             value of the attribute of the object in the XML file that matches the XPath
-        results (:obj:`amici.numpy.ReturnDataView`): simulation results
 
     Returns:
-        :obj:`VariableResults`: results of variables
+        :obj:`dict`: dictionary that maps the targets of changes to AMICI setters
+
+    Raises:
+        :obj:`ValueError`: if a change could not be applied
+    """
+    change_setter_map = {}
+
+    invalid_changes = []
+
+    smbl_id_setter_map = {}
+    for state_type in STATE_TYPES:
+        for i_component, sbml_id in enumerate(getattr(model, state_type['ids'])()):
+            smbl_id_setter_map[sbml_id] = (state_type['setter'], i_component)
+
+    for change in changes:
+        sbml_id = change_sbml_id_map.get(change.target, None)
+        setter = smbl_id_setter_map.get(sbml_id, None)
+        if setter is None:
+            invalid_changes.append(change.target)
+        else:
+            change_setter_map[change.target] = setter
+
+    if invalid_changes:
+        raise ValueError(''.join([
+            'The following change targets are invalid:\n  - {}\n\n'.format(
+                '\n  - '.join(sorted(invalid_changes)),
+            ),
+            'Targets must have one of the following SBML ids:\n  - {}'.format(
+                '\n  - '.join(sorted(smbl_id_setter_map.keys())),
+            ),
+        ]))
+
+    # return a map from changes to AMICI setters
+    return change_setter_map
+
+
+def validate_variables(model, variables, variable_target_sbml_id_map):
+    """ Validate variables
+
+    Args:
+        model (:obj:`amici.amici.ModelPtr`): AMICI model
+        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
+        variable_target_sbml_id_map (:obj:`dict` of :obj:`str` to :obj:`str`): dictionary that maps each XPath to the
+            value of the attribute of the object in the XML file that matches the XPath
+
+    Returns:
+        :obj:`dict`: dictionary that maps the targets and symbols of variables to AMICI observables
 
     Raises:
         :obj:`NotImplementedError`: if a symbol could not be recorded
         :obj:`ValueError`: if a target could not be recorded
     """
-    sbml_id_to_obs_index = {id: index for index, id in enumerate(model.getObservableIds())}
+    variable_observable_map = {}
 
-    variable_results = VariableResults()
     unpredicted_symbols = []
     unpredicted_targets = []
+
+    sbml_id_to_obs_index = {id: index for index, id in enumerate(model.getObservableIds())}
+
     for variable in variables:
         if variable.symbol:
             if variable.symbol == Symbol.time:
-                variable_results[variable.id] = results['ts']
+                variable_observable_map[(variable.target, variable.symbol)] = ('ts', None)
             else:
                 unpredicted_symbols.append(variable.symbol)
 
         else:
-            sbml_id = target_x_paths_ids.get(variable.target, None)
+            sbml_id = variable_target_sbml_id_map.get(variable.target, None)
             i_obs = sbml_id_to_obs_index.get(sbml_id, None)
             if i_obs is None:
                 unpredicted_targets.append(variable.target)
             else:
-                variable_results[variable.id] = results['y'][:, i_obs]
+                variable_observable_map[(variable.target, variable.symbol)] = ('y', i_obs)
 
     if unpredicted_symbols:
         raise NotImplementedError("".join([
@@ -401,6 +491,29 @@ def extract_variables_from_results(model, sbml_model, variables, target_x_paths_
             ),
         ]))
 
+    # return a map from variables to AMICI observables
+    return variable_observable_map
+
+
+def extract_variables_from_results(variables, variable_observable_map, results):
+    """ Extract data generator variables from results
+
+    Args:
+        variables (:obj:`list` of :obj:`Variable`): variables that should be recorded
+        variable_observable_map (:obj:`dict`): dictionary that maps the targets and symbols of variables to AMICI observables
+        results (:obj:`amici.numpy.ReturnDataView`): simulation results
+
+    Returns:
+        :obj:`VariableResults`: results of variables
+    """
+    variable_results = VariableResults()
+    for variable in variables:
+        obs_type, obs_index = variable_observable_map[(variable.target, variable.symbol)]
+        result = results[obs_type]
+        if obs_index is not None:
+            result = result[:, obs_index]
+        variable_results[variable.id] = result
+
     # return the result of each variable
     return variable_results
 
@@ -415,6 +528,41 @@ def preprocess_sed_task(task, variables, config=None):
         config (:obj:`Config`, optional): BioSimulators common configuration
 
     Returns:
-        :obj:`object`: preprocessed information about the task
+        :obj:`dict`: preprocessed information about the task
     """
-    pass
+    if not config:
+        config = get_config()
+
+    model_change_sbml_id_map, variable_target_sbml_id_map = validate_task(task, variables, config=config)
+
+    # Read the model for the task
+    amici_model, sbml_model, python_module_name, python_model_dirname = import_model_from_sbml(
+        task.model.source, sorted(variable_target_sbml_id_map.values()))
+
+    # cleanup module and temporary directory
+    cleanup_model(python_module_name, python_model_dirname)
+
+    # validate model changes and variables
+    model_change_setter_map = validate_model_changes(amici_model, task.model.changes, model_change_sbml_id_map)
+    variable_observable_map = validate_variables(amici_model, variables, variable_target_sbml_id_map)
+
+    # Configure task
+    solver, solver_kisao_id, solver_args = config_task(task, amici_model, config=config)
+
+    # return preprocessed information
+    return {
+        'model': {
+            'model': amici_model,
+            'model_change_setter_map': model_change_setter_map,
+            'variable_observable_map': variable_observable_map,
+        },
+        'simulation': {
+            'algorithm_kisao_id': solver_kisao_id,
+            'solver': solver,
+            'simulator_details': {
+                'solver': amici.CVodeSolver.__module__ + '.' + amici.CVodeSolver.__name__,
+                'method': amici.runAmiciSimulation.__module__ + '.' + amici.runAmiciSimulation.__name__,
+                'arguments': solver_args,
+            }
+        },
+    }
