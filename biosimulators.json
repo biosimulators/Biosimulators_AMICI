@@ -19,6 +19,12 @@
     },
     "operatingSystemType": "Linux"
   },
+  "cli": {
+    "packageRepository": "PyPI",
+    "package": "biosimulators-amici",
+    "command": "biosimulators-amici",
+    "installationInstructions": "https://docs.biosimulators.org/Biosimulators_AMICI/installation.html"
+  },
   "pythonApi": {
     "package": "biosimulators-amici",
     "module": "biosimulators_amici",
