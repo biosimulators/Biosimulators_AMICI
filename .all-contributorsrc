@@ -13,12 +13,40 @@
       "contributions": [
         "code"
       ]
-    } 
+    },
+    {
+      "login": "FFroehlich",
+      "name": "Fabian Fröhlich",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14923969?v=4",
+      "profile": "https://scholar.harvard.edu/fabianfroehlich/home",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "dweindl",
+      "name": "Daniel Weindl",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18048784?v=4",
+      "profile": "https://www.helmholtz-muenchen.de/icb/institute/staff/staff/ma/5122/index.html",
+      "contributions": [
+        "tool"
+      ]
+    },
+    {
+      "login": "JanHasenauer",
+      "name": "Jan Hasenauer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12297214?v=4",
+      "profile": "https://github.com/JanHasenauer",
+      "contributions": [
+        "tool"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "projectName": "Biosimulators_AMICI",
   "projectOwner": "biosimulators",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "none"
 }
