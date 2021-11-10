@@ -103,8 +103,8 @@
         "title": "Scalable parameter estimation for genome-scale biochemical reaction networks",
         "authors": "Fabian Fröhlich, Barbara Kaltenbacher, Fabian J. Theis & Jan Hasenauer",
         "journal": "PLOS Computational Biology",
-        "volume": 13,
-        "issue": 1,
+        "volume": "13",
+        "issue": "1",
         "pages": "e1005331",
         "year": 2017,
         "identifiers": [
@@ -119,8 +119,8 @@
         "title": "Parameter estimation for dynamical systems with discrete events and logical operations",
         "authors": "Fabian Fröhlich, Fabian J. Theis, Joachim O Rädler & Jan Hasenauer",
         "journal": "Bioinformatics",
-        "volume": 33,
-        "issue": 7,
+        "volume": "33",
+        "issue": "7",
         "pages": "1049-1056",
         "year": 2017,
         "identifiers": [
@@ -215,7 +215,7 @@
           "title": "CVODES: the sensitivity-enabled ODE solver in SUNDIALS",
           "authors": "Radu Serban & Alan C. Hindmarsh",
           "journal": "ASME 2005 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference",
-          "volume": 47438,
+          "volume": "47438",
           "pages": "257-269",
           "year": 2005,
           "identifiers": [
@@ -362,8 +362,8 @@
           "title": "SUNDIALS: Suite of nonlinear and differential/algebraic equation solvers",
           "authors": "Alan C. Hindmarsh, Peter N. Brown, Keith E. Grant, Steven L. Lee, Radu Serban, Dan E. Shumaker & Carol S. Woodward",
           "journal": "ACM Transactions on Mathematical Software",
-          "volume": 31,
-          "issue": 3,
+          "volume": "31",
+          "issue": "3",
           "pages": "363-396",
           "year": 2005,
           "identifiers": [
