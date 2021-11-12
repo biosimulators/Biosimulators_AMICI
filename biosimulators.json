@@ -1,7 +1,7 @@
 {
   "id": "amici",
   "name": "AMICI",
-  "version": "0.11.19",
+  "version": "0.11.20",
   "description": "AMICI provides an interface for the SUNDIALS solvers CVODES (for ordinary differential equations) and IDAS (for algebraic differential equations).",
   "urls": [
     {
@@ -10,7 +10,7 @@
     }
   ],
   "image": {
-    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.19",
+    "url": "ghcr.io/biosimulators/biosimulators_amici/amici:0.11.20",
     "format": {
       "namespace": "EDAM",
       "id": "format_3973",
@@ -162,7 +162,11 @@
       "modelChangePatterns": [
         {
           "name": "Change component attributes",
-          "types": ["SedAttributeModelChange", "SedComputeAttributeChangeModelChange", "SedSetValueAttributeModelChange"],
+          "types": [
+            "SedAttributeModelChange",
+            "SedComputeAttributeChangeModelChange",
+            "SedSetValueAttributeModelChange"
+          ],
           "target": {
             "value": "//*/@*",
             "grammar": "XPath"
@@ -170,7 +174,9 @@
         },
         {
           "name": "Add components",
-          "types": ["SedAddXmlModelChange"],
+          "types": [
+            "SedAddXmlModelChange"
+          ],
           "target": {
             "value": "//*",
             "grammar": "XPath"
@@ -178,7 +184,9 @@
         },
         {
           "name": "Remove components",
-          "types": ["SedRemoveXmlModelChange"],
+          "types": [
+            "SedRemoveXmlModelChange"
+          ],
           "target": {
             "value": "//*",
             "grammar": "XPath"
@@ -186,12 +194,14 @@
         },
         {
           "name": "Change components",
-          "types": ["SedChangeXmlModelChange"],
+          "types": [
+            "SedChangeXmlModelChange"
+          ],
           "target": {
             "value": "//*",
             "grammar": "XPath"
           }
-        }        
+        }
       ],
       "simulationFormats": [
         {
@@ -201,7 +211,9 @@
           "supportedFeatures": []
         }
       ],
-      "simulationTypes": ["SedUniformTimeCourseSimulation"],
+      "simulationTypes": [
+        "SedUniformTimeCourseSimulation"
+      ],
       "archiveFormats": [
         {
           "namespace": "EDAM",
@@ -303,26 +315,38 @@
         {
           "name": "time",
           "symbol": {
-                    "value": "time",
-                    "namespace": "urn:sedml:symbol"
-                  }
+            "value": "time",
+            "namespace": "urn:sedml:symbol"
+          }
         },
         {
           "name": "species concentrations",
-          "target": {"value": "/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species", "grammar": "XPath"}
+          "target": {
+            "value": "/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species",
+            "grammar": "XPath"
+          }
         },
         {
           "name": "parameter values",
-          "target": {"value": "/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter", "grammar": "XPath"}
+          "target": {
+            "value": "/sbml:sbml/sbml:model/sbml:listOfParameters/sbml:parameter",
+            "grammar": "XPath"
+          }
         },
         {
           "name": "reaction fluxes",
-          "target": {"value": "/sbml:sbml/sbml:model/sbml:listOfReactions/sbml:reaction", "grammar": "XPath"}
+          "target": {
+            "value": "/sbml:sbml/sbml:model/sbml:listOfReactions/sbml:reaction",
+            "grammar": "XPath"
+          }
         },
         {
           "name": "compartment sizes",
-          "target": {"value": "/sbml:sbml/sbml:model/sbml:listOfCompartments/sbml:compartment", "grammar": "XPath"}
-        }        
+          "target": {
+            "value": "/sbml:sbml/sbml:model/sbml:listOfCompartments/sbml:compartment",
+            "grammar": "XPath"
+          }
+        }
       ],
       "availableSoftwareInterfaceTypes": [
         "library",
