@@ -1,5 +1,5 @@
 amici >= 0.11.17
-biosimulators_utils[logging] >= 0.1.122
+biosimulators_utils[logging] >= 0.1.151
 kisao
 lxml
 numpy
