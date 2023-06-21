@@ -37,9 +37,9 @@ jobs:
         run: |
           mainBranch=$(git symbolic-ref refs/remotes/origin/HEAD | cut -d '/' -f 4)
           mainBranchHeadRevision=$(git rev-parse refs/remotes/origin/${mainBranch})
-          echo "::set-output name=mainBranch::$mainBranch"
-          echo "::set-output name=mainBranchRef::refs/heads/$mainBranch"
-          echo "::set-output name=mainBranchHeadRevision::$mainBranchHeadRevision"
+          echo "mainBranch=mainBranch" >> $GIT_OUTPUT
+          echo "mainBranchRef=mainBranchRef" >> $GIT_OUTPUT
+          echo "mainBranchHeadRevision=mainBranchHeadRevision" >> $GIT_OUTPUT
 
       - name: Checkout ref
         run: |
@@ -85,8 +85,8 @@ jobs:
 
       - name: Install pip and setuptools
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pip==23.0.0
+          python -m pip install --upgrade pip==23.0.0
 
       - name: Install system dependencies
         run: |
@@ -123,7 +123,7 @@ jobs:
             version=$(python -c "import glob; import importlib.util; version_filename = glob.glob('**/_version.py', recursive=True)[0]; spec = importlib.util.spec_from_file_location('module.name', version_filename); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); print(module.__version__)")
           fi
 
-          echo "::set-output name=version::$version"
+          echo "version=$version" >> $GIT_OUTPUT
 
       - id: get-docker-image-tag
         name: Determine Docker image tag
@@ -131,17 +131,17 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends jq
 
-          SIMULATOR_ID=$(jq -r '.id' biosimulators.json)
-          SIMULATOR_VERSION=$(jq -r '.version' biosimulators.json)
-          SIMULATOR_NAME=$(jq -r '.name' biosimulators.json)
-          IMAGE_BASE_URL=$(jq -r '.image.url' biosimulators.json | cut -d : -f 1)
-          DOCKER_REGISTRY=$(echo $IMAGE_BASE_URL | cut -d / -f 1)
+          simulatorId=$(jq -r '.id' biosimulators.json)
+          simulatorVersion=$(jq -r '.version' biosimulators.json)
+          simulatorName=$(jq -r '.name' biosimulators.json)
+          dockerImageBaseUrl=$(jq -r '.image.url' biosimulators.json | cut -d : -f 1)
+          dockerRegistry=$(echo $dockerImageBaseUrl | cut -d / -f 1)
 
-          echo "::set-output name=simulatorId::${SIMULATOR_ID}"
-          echo "::set-output name=simulatorVersion::${SIMULATOR_VERSION}"
-          echo "::set-output name=simulatorName::${SIMULATOR_NAME}"
-          echo "::set-output name=dockerImageBaseUrl::${IMAGE_BASE_URL}"
-          echo "::set-output name=dockerRegistry::${DOCKER_REGISTRY}"
+          echo "simulatorId=$simulatorId" >> $GIT_OUTPUT
+          echo "simulatorVersion=$simulatorVersion" >> $GIT_OUTPUT
+          echo "simulatorName=$simulatorName" >> $GIT_OUTPUT
+          echo "dockerImageBaseUrl=$dockerImageBaseUrl" >> $GIT_OUTPUT
+          echo "dockerRegistry=$dockerRegistry" >> $GIT_OUTPUT
 
       - name: Build Docker image
         run: |
@@ -235,7 +235,7 @@ jobs:
             fi
           fi
 
-          echo "::set-output name=release::$release"
+          echo "release=$release" >> $GIT_OUTPUT
 
       # If new tag, commit and push documentation
       - id: commit-docs
@@ -259,7 +259,7 @@ jobs:
           else
             docsChanged=0
           fi
-          echo "::set-output name=docsChanged::$docsChanged"
+          echo "docsChanged=$docsChanged" >> $GIT_OUTPUT
 
       - name: Push the compiled documentation
         if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1' && steps.commit-docs.outputs.docsChanged == '1'
