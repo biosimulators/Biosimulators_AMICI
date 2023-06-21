@@ -37,9 +37,9 @@ jobs:
         run: |
           mainBranch=$(git symbolic-ref refs/remotes/origin/HEAD | cut -d '/' -f 4)
           mainBranchHeadRevision=$(git rev-parse refs/remotes/origin/${mainBranch})
-          echo "mainBranch=mainBranch" >> $GIT_OUTPUT
-          echo "mainBranchRef=mainBranchRef" >> $GIT_OUTPUT
-          echo "mainBranchHeadRevision=mainBranchHeadRevision" >> $GIT_OUTPUT
+          echo "mainBranch=mainBranch" >> $GITHUB_OUTPUT
+          echo "mainBranchRef=mainBranchRef" >> $GITHUB_OUTPUT
+          echo "mainBranchHeadRevision=mainBranchHeadRevision" >> $GITHUB_OUTPUT
 
       - name: Checkout ref
         run: |
@@ -71,12 +71,12 @@ jobs:
       ## Install package and its dependencies
       #############################################
       - name: Install Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.9'
 
       - name: Setup pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/Python
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements.optional.txt') }}
@@ -123,7 +123,7 @@ jobs:
             version=$(python -c "import glob; import importlib.util; version_filename = glob.glob('**/_version.py', recursive=True)[0]; spec = importlib.util.spec_from_file_location('module.name', version_filename); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); print(module.__version__)")
           fi
 
-          echo "version=$version" >> $GIT_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - id: get-docker-image-tag
         name: Determine Docker image tag
@@ -137,11 +137,11 @@ jobs:
           dockerImageBaseUrl=$(jq -r '.image.url' biosimulators.json | cut -d : -f 1)
           dockerRegistry=$(echo $dockerImageBaseUrl | cut -d / -f 1)
 
-          echo "simulatorId=$simulatorId" >> $GIT_OUTPUT
-          echo "simulatorVersion=$simulatorVersion" >> $GIT_OUTPUT
-          echo "simulatorName=$simulatorName" >> $GIT_OUTPUT
-          echo "dockerImageBaseUrl=$dockerImageBaseUrl" >> $GIT_OUTPUT
-          echo "dockerRegistry=$dockerRegistry" >> $GIT_OUTPUT
+          echo "simulatorId=$simulatorId" >> $GITHUB_OUTPUT
+          echo "simulatorVersion=$simulatorVersion" >> $GITHUB_OUTPUT
+          echo "simulatorName=$simulatorName" >> $GITHUB_OUTPUT
+          echo "dockerImageBaseUrl=$dockerImageBaseUrl" >> $GITHUB_OUTPUT
+          echo "dockerRegistry=$dockerRegistry" >> $GITHUB_OUTPUT
 
       - name: Build Docker image
         run: |
@@ -235,7 +235,7 @@ jobs:
             fi
           fi
 
-          echo "release=$release" >> $GIT_OUTPUT
+          echo "release=$release" >> $GITHUB_OUTPUT
 
       # If new tag, commit and push documentation
       - id: commit-docs
@@ -259,7 +259,7 @@ jobs:
           else
             docsChanged=0
           fi
-          echo "docsChanged=$docsChanged" >> $GIT_OUTPUT
+          echo "docsChanged=$docsChanged" >> $GITHUB_OUTPUT
 
       - name: Push the compiled documentation
         if: startsWith(github.ref, 'refs/tags/') && steps.determine-if-release-needed.outputs.release == '1' && steps.commit-docs.outputs.docsChanged == '1'
