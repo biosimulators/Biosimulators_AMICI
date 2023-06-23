@@ -1,5 +1,5 @@
 # Base OS
-FROM python:3.9-slim-buster
+FROM python:3.11-slim-bookworm
 
 ARG VERSION="0.1.22"
 ARG SIMULATOR_VERSION="0.11.25"
