@@ -46,9 +46,8 @@ RUN apt-get update -y \
 # Copy code for command-line interface into image and install it
 COPY . /root/Biosimulators_AMICI
 RUN pip install pip==23.0.1
-RUN pip install /root/Biosimulators_AMICI \
+RUN pip install /root/Biosimulators_AMICI amici==${SIMULATOR_VERSION} \
     && rm -rf /root/Biosimulators_AMICI
-RUN pip install amici==${SIMULATOR_VERSION}
 ENV VERBOSE=0 \
     MPLBACKEND=PDF
 
