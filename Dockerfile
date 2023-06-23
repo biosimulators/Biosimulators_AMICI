@@ -46,7 +46,7 @@ RUN apt-get update -y \
 # Copy code for command-line interface into image and install it
 COPY . /root/Biosimulators_AMICI
 RUN pip install pip==23.0.1
-RUN pip install sympy /root/Biosimulators_AMICI amici==${SIMULATOR_VERSION} \
+RUN pip install sympy /root/Biosimulators_AMICI \ # amici==${SIMULATOR_VERSION} \
     && rm -rf /root/Biosimulators_AMICI
 ENV VERBOSE=0 \
     MPLBACKEND=PDF
