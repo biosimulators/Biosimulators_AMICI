@@ -251,7 +251,7 @@ class CoreMainTestCase(unittest.TestCase):
             model.changes.append(sedml_data_model.ModelAttributeChange(
                 target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='{}']".format(variable_id),
                 target_namespaces=self.NAMESPACES,
-                new_value=None))
+                new_value=1.3))
             variables.append(sedml_data_model.Variable(
                 id=variable_id,
                 target="/sbml:sbml/sbml:model/sbml:listOfSpecies/sbml:species[@id='{}']".format(variable_id),
@@ -673,3 +673,6 @@ class CoreMainTestCase(unittest.TestCase):
             archive_filename, out_dir, docker_image, environment=env, pull_docker_image=False)
 
         self._assert_combine_archive_outputs(doc, out_dir)
+
+if __name__ == "__main__":
+    unittest.main()
