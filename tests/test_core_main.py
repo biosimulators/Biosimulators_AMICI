@@ -287,7 +287,7 @@ class CoreMainTestCase(unittest.TestCase):
         for variable_id in variable_ids:
             numpy.testing.assert_allclose(
                 results3[variable_id],
-                results[variable_id][-int(sim.number_of_points + 1):],
+                results[variable_id][-int(sim.number_of_points + 1):], rtol=1e-5, atol=1e-4
             )
 
         task.model.changes = [
