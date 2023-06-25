@@ -280,7 +280,7 @@ def import_model_from_sbml(filename, variables):
     model_dir = tempfile.mkdtemp()
     model_name = 'biosimulators_amici_model_' + os.path.basename(model_dir)
     constant_parameters = [param.getId() for param in sbml_model.parameters if param.constant]
-    observables = {var: {'name': var, 'formula': var} for var in variables}
+    observables = {variable_id_to_observable_id(var): {'name': var, 'formula': var} for var in variables}
     sbml_importer.sbml2amici(model_name,
                              model_dir,
                              observables=observables,
@@ -456,7 +456,7 @@ def validate_variables(model, variables, variable_target_sbml_id_map):
     unpredicted_symbols = []
     unpredicted_targets = []
 
-    sbml_id_to_obs_index = {id: index for index, id in enumerate(model.getObservableIds())}
+    obs_id_to_obs_index = {id: index for index, id in enumerate(model.getObservableIds())}
 
     for variable in variables:
         if variable.symbol:
@@ -467,7 +467,7 @@ def validate_variables(model, variables, variable_target_sbml_id_map):
 
         else:
             sbml_id = variable_target_sbml_id_map.get(variable.target, None)
-            i_obs = sbml_id_to_obs_index.get(sbml_id, None)
+            i_obs = obs_id_to_obs_index.get(variable_id_to_observable_id(sbml_id), None)
             if i_obs is None:
                 unpredicted_targets.append(variable.target)
             else:
@@ -566,3 +566,12 @@ def preprocess_sed_task(task, variables, config=None):
             }
         },
     }
+
+
+def variable_id_to_observable_id(variable_id: str) -> str:
+    """Convert a variable ID to an observable ID.
+
+    In AMICI, identifiers need to be globally unique. Therefore, we cannot use a species ID as an observable ID.
+    Let's hope that this alias does not already exist in the model...
+    """
+    return f"___{variable_id}"
