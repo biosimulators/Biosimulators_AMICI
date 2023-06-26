@@ -37,9 +37,9 @@ jobs:
         run: |
           mainBranch=$(git symbolic-ref refs/remotes/origin/HEAD | cut -d '/' -f 4)
           mainBranchHeadRevision=$(git rev-parse refs/remotes/origin/${mainBranch})
-          echo "mainBranch=mainBranch" >> $GITHUB_OUTPUT
-          echo "mainBranchRef=mainBranchRef" >> $GITHUB_OUTPUT
-          echo "mainBranchHeadRevision=mainBranchHeadRevision" >> $GITHUB_OUTPUT
+          echo "mainBranch=$mainBranch" >> $GITHUB_OUTPUT
+          echo "mainBranchRef=$mainBranchRef" >> $GITHUB_OUTPUT
+          echo "mainBranchHeadRevision=$mainBranchHeadRevision" >> $GITHUB_OUTPUT
 
       - name: Checkout ref
         run: |
