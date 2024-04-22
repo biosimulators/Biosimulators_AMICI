@@ -2,7 +2,7 @@
 FROM python:3.11-slim-bookworm
 
 ARG VERSION="0.1.22"
-ARG SIMULATOR_VERSION="0.23.1"
+ARG SIMULATOR_VERSION="0.24.0"
 
 # metadata
 LABEL \
