@@ -2,7 +2,7 @@
 FROM python:3.11-slim-bookworm
 
 ARG VERSION="0.1.22"
-ARG SIMULATOR_VERSION="0.24.0"
+ARG SIMULATOR_VERSION="0.34.0"
 
 # metadata
 LABEL \
@@ -47,11 +47,11 @@ RUN apt-get update -y \
 
 # Copy code for command-line interface into image and install it
 COPY . /root/Biosimulators_AMICI
-RUN pip install pip==23.0.1
-RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_BIOSIMULATORS_AMICI=${VERSION} pip install /root/Biosimulators_AMICI \
+RUN python -m pip install -U setuptools pip
+# AMICI has to be installed before biosimulators_amici to get the right version
+RUN AMICI_PARALLEL_COMPILE="" python -m pip install amici==${SIMULATOR_VERSION}
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_BIOSIMULATORS_AMICI=${VERSION} python -m pip install /root/Biosimulators_AMICI \
     && rm -rf /root/Biosimulators_AMICI
-#RUN pip install sympy /root/Biosimulators_AMICI amici==${SIMULATOR_VERSION} \
-#    && rm -rf /root/Biosimulators_AMICI
 ENV VERBOSE=0 \
     MPLBACKEND=PDF \
     AMICI_PARALLEL_COMPILE=""
