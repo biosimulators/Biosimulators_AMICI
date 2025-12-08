@@ -98,7 +98,9 @@ jobs:
 
       # install package
       - name: Install the package
-        run: python -m pip install .[all]
+        run: |
+          python -m pip install .[all]
+          python -m pip install amici
 
       #############################################
       ## Lint
@@ -120,7 +122,7 @@ jobs:
           if [[ "${TAG}" =~ ^refs/tags/ ]]; then
             version="${TAG/refs\/tags\//}"
           else
-            version=$(python -c "import glob; import importlib.util; version_filename = glob.glob('**/_version.py', recursive=True)[0]; spec = importlib.util.spec_from_file_location('module.name', version_filename); module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); print(module.__version__)")
+            version=$(python -c "from biosimulators_amici import __version__; print(__version__)")
           fi
 
           echo "version=$version" >> $GITHUB_OUTPUT
@@ -180,7 +182,7 @@ jobs:
       ## Compile documentation
       #############################################
       - name: Install the requirements for compiling the documentation
-        run: python -m pip install -r docs-src/requirements.txt
+        run: python -m pip install .[doc]
 
       - name: Compile the documentation
         run: |

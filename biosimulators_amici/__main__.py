@@ -7,7 +7,7 @@
 """
 
 from . import get_simulator_version
-from ._version import __version__
+from . import __version__
 from .core import exec_sedml_docs_in_combine_archive
 from biosimulators_utils.simulator.cli import build_cli
 

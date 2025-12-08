@@ -1,7 +1,12 @@
 import amici
 
-from ._version import __version__  # noqa: F401
-# :obj:`str`: version
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("biosimulators-amici")
+except PackageNotFoundError:
+    # package is not installed
+    pass
 
 from .core import exec_sed_task, preprocess_sed_task, exec_sed_doc, exec_sedml_docs_in_combine_archive  # noqa: F401
 

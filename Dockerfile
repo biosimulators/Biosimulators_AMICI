@@ -32,6 +32,7 @@ LABEL \
 # Install requirements
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
+        git \
         g++ \
         libexpat1 \
         libatlas-base-dev \
@@ -47,7 +48,7 @@ RUN apt-get update -y \
 # Copy code for command-line interface into image and install it
 COPY . /root/Biosimulators_AMICI
 RUN pip install pip==23.0.1
-RUN pip install sympy /root/Biosimulators_AMICI \
+RUN SETUPTOOLS_SCM_PRETEND_VERSION_FOR_BIOSIMULATORS_AMICI=${VERSION} pip install sympy /root/Biosimulators_AMICI \
     && rm -rf /root/Biosimulators_AMICI
 #RUN pip install sympy /root/Biosimulators_AMICI amici==${SIMULATOR_VERSION} \
 #    && rm -rf /root/Biosimulators_AMICI

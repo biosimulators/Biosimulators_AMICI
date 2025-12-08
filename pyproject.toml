@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=80", "setuptools-scm[simple]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biosimulators_amici"
+dynamic = ["version"]
+
+description = "BioSimulators-compliant command-line interface to the AMICI simulation program <https://github.com/AMICI-dev/amici>."
+readme = "README.md"
+authors = [
+  { name = "Center for Reproducible Biomedical Modeling", email = "info@biosimulators.org" }
+]
+license = { text = "MIT" }
+keywords = [
+  "BioSimulators",
+  "systems biology",
+  "computational biology",
+  "mathematical model",
+  "kinetic model",
+  "simulation",
+  "SBML",
+  "SED-ML",
+  "COMBINE",
+  "OMEX",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+dependencies = [
+    "biosimulators-utils[logging] >= 0.1.180",
+    "amici >= 0.11.17",
+    "kisao >= 2.33",
+    "lxml",
+    "numpy",
+]
+
+[project.optional-dependencies]
+tests = [
+    "biosimulators_utils[containers]",
+    "python_dateutil",
+]
+doc = [
+    "pydata-sphinx-theme",
+    "sphinx >= 1.8",
+]
+all = [
+    "biosimulators_utils[containers]",
+    "python_dateutil",
+    "pydata-sphinx-theme",
+    "sphinx >= 1.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/biosimulators/Biosimulators_AMICI"
+Download = "https://github.com/biosimulators/Biosimulators_AMICI"
+
+[project.scripts]
+biosimulators-amici = "biosimulators_amici.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests", "tests.*"]

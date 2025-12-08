@@ -4,10 +4,10 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-import re
 import datetime
 import os
 import sys
+import biosimulators_amici
 
 # -- Path setup --------------------------------------------------------------
 
@@ -23,15 +23,10 @@ project = 'BioSimulators-AMICI'
 copyright = '{}, BioSimulators Team'.format(datetime.datetime.now().year)
 author = 'BioSimulators Team'
 
-# The short X.Y version
-filename = os.path.join(source_dir, '_version.py')
-verstrline = open(filename, 'rt').read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, verstrline, re.M)
-version = mo.group(1)
-
 # The full version, including alpha/beta/rc tags
-release = '.'.join(version.split('.')[0:3])
+release = biosimulators_amici.__version__
+# The short X.Y version
+version = '.'.join(release.split('.')[0:2])
 
 # -- General configuration ---------------------------------------------------
 
