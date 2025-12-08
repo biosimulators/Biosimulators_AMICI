@@ -16,7 +16,7 @@ LABEL \
     org.opencontainers.image.vendor="BioSimulators Team" \
     org.opencontainers.image.licenses="BSD-3-Clause" \
     \
-    base_image="python:3.9-slim-buster" \
+    base_image="python:3.11-slim-bookworm" \
     version="${VERSION}" \
     software="AMICI" \
     software.version="${SIMULATOR_VERSION}" \
@@ -33,6 +33,7 @@ LABEL \
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
         g++ \
+        libexpat1 \
         libatlas-base-dev \
         swig \
     && apt-get autoremove -y \
