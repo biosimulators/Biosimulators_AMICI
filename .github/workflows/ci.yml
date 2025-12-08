@@ -76,7 +76,7 @@ jobs:
           python-version: '3.11'
 
       - name: Setup pip cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /opt/hostedtoolcache/Python
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements.optional.txt') }}
