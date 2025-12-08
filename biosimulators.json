@@ -38,15 +38,33 @@
       "identifiers": []
     },
     {
-      "firstName": "Jan",
-      "middleName": null,
-      "lastName": "Hasenauer",
-      "identifiers": []
-    },
-    {
       "firstName": "Daniel",
       "middleName": null,
       "lastName": "Weindl",
+      "identifiers": []
+    },
+    {
+      "firstName": "Yannik",
+      "middleName": null,
+      "lastName": "Schälte",
+      "identifiers": []
+    },
+    {
+      "firstName": "Dilan",
+      "middleName": null,
+      "lastName": "Pathirana",
+      "identifiers": []
+    },
+    {
+      "firstName": "Lukasz",
+      "middleName": null,
+      "lastName": "Paszkowski",
+      "identifiers": []
+    },
+    {
+      "firstName": "Glenn Terje",
+      "middleName": null,
+      "lastName": "Lines",
       "identifiers": []
     },
     {
@@ -55,28 +73,10 @@
       "lastName": "Stapor",
       "identifiers": []
     },
-    {
-      "firstName": "Fabian",
-      "middleName": "J.",
-      "lastName": "Theis",
-      "identifiers": []
-    },
-    {
-      "firstName": "Barbara",
+        {
+      "firstName": "Jan",
       "middleName": null,
-      "lastName": "Kaltenbacher",
-      "identifiers": []
-    },
-    {
-      "firstName": "Joachim",
-      "middleName": "O.",
-      "lastName": "Rädler",
-      "identifiers": []
-    },
-    {
-      "firstName": "Yannik",
-      "middleName": null,
-      "lastName": "Schälte",
+      "lastName": "Hasenauer",
       "identifiers": []
     }
   ],
@@ -100,34 +100,18 @@
     ],
     "citations": [
       {
-        "title": "Scalable parameter estimation for genome-scale biochemical reaction networks",
-        "authors": "Fabian Fröhlich, Barbara Kaltenbacher, Fabian J. Theis & Jan Hasenauer",
-        "journal": "PLOS Computational Biology",
-        "volume": "13",
-        "issue": "1",
-        "pages": "e1005331",
-        "year": 2017,
-        "identifiers": [
-          {
-            "namespace": "doi",
-            "id": "10.1371/journal.pcbi.1005331",
-            "url": "https://doi.org/10.1371/journal.pcbi.1005331"
-          }
-        ]
-      },
-      {
-        "title": "Parameter estimation for dynamical systems with discrete events and logical operations",
-        "authors": "Fabian Fröhlich, Fabian J. Theis, Joachim O Rädler & Jan Hasenauer",
+        "title": "AMICI: High-Performance Sensitivity Analysis for Large Ordinary Differential Equation Models",
+        "authors": "Fabian Fröhlich, Daniel Weindl, Yannik Schälte, Dilan Pathirana, Paszkowski Lukasz, Glenn Terje Lines, Paul Stapor & Jan Hasenauer",
         "journal": "Bioinformatics",
-        "volume": "33",
-        "issue": "7",
-        "pages": "1049-1056",
-        "year": 2017,
+        "volume": "37",
+        "issue": "20",
+        "pages": "3676–3677",
+        "year": 2021,
         "identifiers": [
           {
             "namespace": "doi",
-            "id": "10.1093/bioinformatics/btw764",
-            "url": "https://doi.org/10.1093/bioinformatics/btw764"
+            "id": "10.1093/bioinformatics/btab227",
+            "url": "https://doi.org/10.1093/bioinformatics/btab227"
           }
         ]
       }
