@@ -32,11 +32,8 @@ LABEL \
 # Install requirements
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
-        git \
         g++ \
         libexpat1 \
-        libatlas-base-dev \
-        swig \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 

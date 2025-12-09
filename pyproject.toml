@@ -33,7 +33,7 @@ classifiers = [
 
 dependencies = [
     "biosimulators-utils[logging] >= 0.1.180",
-    "amici >= 0.11.17",
+    "amici >= 0.34.0, < 1.0.0",
     "kisao >= 2.33",
     "lxml",
     "numpy",
