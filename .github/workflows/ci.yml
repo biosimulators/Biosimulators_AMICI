@@ -85,8 +85,8 @@ jobs:
 
       - name: Install pip and setuptools
         run: |
-          python -m pip install --upgrade pip==23.0.0
-          python -m pip install --upgrade pip==23.0.0
+          python -m pip install --upgrade setuptools
+          python -m pip install --upgrade pip
 
       - name: Install system dependencies
         run: |
@@ -99,8 +99,10 @@ jobs:
       # install package
       - name: Install the package
         run: |
+          simulatorVersion=$(jq -r '.version' biosimulators.json)
+          # AMICI has to be installed before biosimulators_amici to get the right version
+          AMICI_PARALLEL_COMPILE="" python -m pip install amici==$simulatorVersion
           python -m pip install .[all]
-          AMICI_PARALLEL_COMPILE="" python -m pip install amici
 
       #############################################
       ## Lint
@@ -178,7 +180,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unittests
-          file: ./coverage.xml
+          files: ./coverage.xml
 
       #############################################
       ## Compile documentation
