@@ -17,11 +17,9 @@ A simple web application and web service for using AMICI to execute COMBINE/OMEX
 
 ### Dependencies
 
-* Python >= 3.7
+* Python >= 3.11
 * pip
-* libatlas
 * g++
-* swig
 
 ### Install Python package
 ```

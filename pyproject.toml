@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "biosimulators_amici"
 dynamic = ["version"]
+requires-python = ">=3.11"
 
 description = "BioSimulators-compliant command-line interface to the AMICI simulation program <https://github.com/AMICI-dev/amici>."
 readme = "README.md"

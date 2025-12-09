@@ -66,9 +66,9 @@ To release changes, contact the [lead developers](mailto:info@biosimulators.org)
 Below are instructions for releasing a new version:
 
 1. Make the required changes to the repository.
-  * To update the version of the underyling simulator, update its version numbers in the following files:
-    * `Dockerfile`
-    * `biosimulators.json`
+   * To update the version of the underlying simulator, update its version numbers in the following files:
+   * `Dockerfile`
+   * `biosimulators.json`
 2. Commit the changes to this repository.
 3. Add a tag for the new version by running `git tag { version }`.
 4. Push these commits and the new tag to GitHub by running `git push && git push --tags`.
