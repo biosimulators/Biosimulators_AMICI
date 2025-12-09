@@ -11,7 +11,7 @@ readme = "README.md"
 authors = [
   { name = "Center for Reproducible Biomedical Modeling", email = "info@biosimulators.org" }
 ]
-license = { text = "MIT" }
+license = "MIT"
 keywords = [
   "BioSimulators",
   "systems biology",
@@ -27,7 +27,6 @@ keywords = [
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 

@@ -302,11 +302,10 @@ jobs:
           pandoc --from=gfm --output=README.rst --to=rst README.md
 
           # Install twine
-          python -m pip install wheel twine
+          python -m pip install wheel twine build
 
           # Create packages to upload to PyPI
-          python setup.py sdist
-          python setup.py bdist_wheel
+          python -m build
 
           # Upload packages to PyPI
           twine upload dist/*
