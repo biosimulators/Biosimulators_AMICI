@@ -1,2 +1,0 @@
-biosimulators_utils[containers]
-python_dateutil

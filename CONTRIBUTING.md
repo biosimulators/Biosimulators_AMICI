@@ -13,10 +13,6 @@ The repository follows standard Python conventions:
 * `README.md`: Overview of the repository
 * `biosimulators_amici/`: Python code for a BioSimulators-compliant command-line interface to AMICI
 * `tests/`: unit tests for the command-line interface
-* `setup.py`: installation script for the command-line interface
-* `setup.cfg`: configuration for the installation of the command-line interface
-* `requirements.txt`: dependencies for the command-line interface
-* `requirements.optional.txt`: optional dependencies for the command-line interface
 * `MANIFEST.in`: a list of files to include in the package for the command-line interface
 * `LICENSE`: License
 * `CONTRIBUTING.md`: Guide to contributing to BioSimulators-AMICI (this document)
@@ -54,7 +50,7 @@ coverage html
 BioSimulators-AMICI is documented using [reStructuredText](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html) and the [napoleon Sphinx plugin](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html). The documentation can be compiled by running the following commands:
 
 ```
-python -m pip install -r docs-src/requirements.txt
+python -m pip install .[doc]
 sphinx-apidoc . setup.py --output-dir docs-src/source --force --module-first --no-toc
 sphinx-build docs-src docs
 ```
@@ -71,16 +67,12 @@ Below are instructions for releasing a new version:
 
 1. Make the required changes to the repository.
   * To update the version of the underyling simulator, update its version numbers in the following files:
-    * `requirements.txt`
     * `Dockerfile`
     * `biosimulators.json`
 2. Commit the changes to this repository.
-3. Increment the `__version__` variable in `biosimulators_amici/_version.py`.
-4. Commit this change to `biosimulators_amici/_version.py`.
-5. Add a tag for the new version by running `git tag { version }`. `version` should be equal to the value of the
-   `__version__` variable in `biosimulators_amici/_version.py`.
-6. Push these commits and the new tag to GitHub by running `git push && git push --tags`.
-7. This push will trigger a GitHub action which will execute the following tasks:
+3. Add a tag for the new version by running `git tag { version }`.
+4. Push these commits and the new tag to GitHub by running `git push && git push --tags`.
+5. This push will trigger a GitHub action which will execute the following tasks:
    * Create a GitHub release for the version.
    * Push the release to PyPI.
    * Compile the documentation and push the compiled documentation to the repository so that the new documentation is viewable at github.io.
