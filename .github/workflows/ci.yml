@@ -97,6 +97,7 @@ jobs:
       # install package
       - name: Install the package
         run: |
+          python -m pip install https://github.com/SED-ML/KiSAO/releases/download/2.35/kisao-2.35-py2.py3-none-any.whl
           simulatorVersion=$(jq -r '.version' biosimulators.json)
           # AMICI has to be installed before biosimulators_amici to get the right version
           AMICI_PARALLEL_COMPILE="" python -m pip install amici==$simulatorVersion
